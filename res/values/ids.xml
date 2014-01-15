@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Copyright (C) 2013 Google Inc.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<resources>
+    <!-- TODO: Replace this by your app's app ID! -->
+    <string name="app_id">527691955059</string>
+
+    <!-- TODO: Replace these by your achievement/leaderboard IDs! -->
+    <string name="achievement_play">CgkI8_aQ560PEAIQAQ </string>
+    <string name="achievement_prime">CgkI9-aElbwREAIQAQ</string>
+    <string name="achievement_really_bored">CgkI9-aElbwREAIQCA</string>
+    <string name="achievement_bored">CgkI9-aElbwREAIQAg</string>
+    <string name="achievement_humble">CgkI9-aElbwREAIQBQ</string>
+    <string name="achievement_arrogant">CgkI9-aElbwREAIQBg</string>
+    <string name="achievement_leet">CgkI9-aElbwREAIQBw</string>
+
+    <string name="leaderboard_points">CgkI8_aQ560PEAIQAg</string>
+    <string name="leaderboard_easy">CgkI9-aElbwREAIQCQ</string>
+    <string name="leaderboard_hard">CgkI9-aElbwREAIQCg</string>
+</resources>
