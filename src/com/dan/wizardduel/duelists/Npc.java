@@ -1,27 +1,32 @@
 package com.dan.wizardduel.duelists;
 
+import java.util.ArrayList;
+
 import android.graphics.Color;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
 import android.widget.ImageView;
 
-import com.dan.wizardduel.GameActivity;
 import com.dan.wizardduel.GameFragment;
+import com.dan.wizardduel.MainActivity;
 import com.dan.wizardduel.R;
 import com.dan.wizardduel.combat.CombatController;
-import com.dan.wizardduel.spells.OpponentSpellQueue;
 import com.dan.wizardduel.spells.Spell;
-import com.dan.wizardduel.spells.SpellQueue;
 import com.google.example.games.basegameutils.BaseGameActivity;
+import com.todddavies.components.progressbar.ProgressWheel;
 
 public class Npc extends Duelist {
 	
-	public OpponentSpellQueue spellQueue;
+	public ArrayList<ProgressWheel> spinWheels = new ArrayList<ProgressWheel>();
+	private Npc self;
 
 	public Npc(GameFragment gameFragment) {
 		// TODO Auto-generated constructor stub
 		super(gameFragment);
-		spellQueue = new OpponentSpellQueue(gameFragment, this);
+		self = this;
+		//spellQueue = new OpponentSpellQueue(gameFragment, this);
 		healthBar = (StatMeterView) gameFragment.getView().findViewById(R.id.opponentHealthBar);
 		manaBar = (StatMeterView) gameFragment.getView().findViewById(R.id.opponentManaBar);
 		manaBar.color = Color.BLUE;
@@ -31,6 +36,16 @@ public class Npc extends Duelist {
 		ImageView iv = (ImageView)gameFragment.getView().findViewById(R.id.opponentImage);
 		iv.setImageResource(image);
 		postInit();
+		///////
+		context = gameFragment.getView();
+		// TODO Auto-generated constructor stub
+		spellIVs.add((ImageView) context.findViewById(R.id.opponentPreppedSpell0));
+		spellIVs.add((ImageView) context.findViewById(R.id.opponentPreppedSpell1));
+		spellIVs.add((ImageView) context.findViewById(R.id.opponentPreppedSpell2));
+		
+		spinWheels.add((ProgressWheel)context.findViewById(R.id.opponent_spinner0));
+		spinWheels.add((ProgressWheel)context.findViewById(R.id.opponent_spinner1));
+		spinWheels.add((ProgressWheel)context.findViewById(R.id.opponent_spinner2));
 	}
 	
 	private Handler prepSpellHandler = new Handler(){
@@ -41,15 +56,15 @@ public class Npc extends Duelist {
 	};
 	
 	private void prepRandomSpell(){
-		String randId = Spell.allSpells[GameActivity.random.nextInt(Spell.allSpells.length)];
-		spellQueue.addSpell(randId);
+		String randId = Spell.allSpells[MainActivity.random.nextInt(Spell.allSpells.length)];
+		this.addSpell(randId);
 	}
 	
 	private Handler castSpellHandler = new Handler(){
 		public void handleMessage(Message m){
-			Integer slot = spellQueue.randomFilledSlot();
+			Integer slot = self.randomFilledSlot();
 			if(slot != null){
-				spellQueue.castSpell(slot);
+				self.castSpell(slot);
 			}
 			castSpellHandler.sendMessageDelayed(new Message(), 10000);
 		}
@@ -59,7 +74,45 @@ public class Npc extends Duelist {
 		super.cleanup();
 		castSpellHandler.removeCallbacksAndMessages(null);
 		prepSpellHandler.removeCallbacksAndMessages(null);
-		spellQueue.cleanup();
+	}
+	
+	public void castSpell(final int slot){
+		final Spell spell = spells.get(slot);
+		if(spell == null){
+			return;
+		}
+		if(this.mana < spell.manaCost){
+			return;
+		}else{
+			this.decMana(spell.manaCost);
+		}
+		final ProgressWheel pw = spinWheels.get(slot);
+		
+		final long castTime = spell.castTime*1000;
+		if(spell != null){
+			castTimer = new CountDownTimer(castTime,10){
+
+				@Override
+				public void onFinish() {
+					// TODO Auto-generated method stub
+					gameFragment.opponent.executeSpell(gameFragment.player,spell);
+					removeSpell(slot);
+					pw.setVisibility(View.GONE);
+				}
+
+				@Override
+				public void onTick(long millisUntilFinished) {
+					// TODO Auto-generated method stub
+					pw.incrementProgress();
+					long elapsed = castTime - millisUntilFinished;
+					pw.setProgress((int)(elapsed*360/castTime)+1);
+				}
+
+				
+			};
+			castTimer.start();
+			pw.setVisibility(View.VISIBLE);
+		}
 	}
 
 }

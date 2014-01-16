@@ -36,7 +36,8 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
     String mGreeting = "Hello, anonymous user (not signed in)";
 
     public interface Listener {
-        public void onStartGameRequested(boolean hardMode);
+        public void onStartPracticeGameRequested();
+        public void onStartCustomGameRequested();
         public void onShowAchievementsRequested();
         public void onShowLeaderboardsRequested();
         public void onSignInButtonClicked();
@@ -51,7 +52,7 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_mainmenu, container, false);
         final int[] CLICKABLES = new int[] {
-                R.id.easy_mode_button, R.id.hard_mode_button,
+                R.id.practice_mode_button, R.id.custom_mode_button,
                 R.id.show_achievements_button, R.id.show_leaderboards_button,
                 R.id.sign_in_button, R.id.sign_out_button
         };
@@ -91,10 +92,10 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
     @Override
     public void onClick(View view) {
         int id = view.getId();
-		if (id == R.id.easy_mode_button) {
-			mListener.onStartGameRequested(false);
-		} else if (id == R.id.hard_mode_button) {
-			mListener.onStartGameRequested(true);
+		if (id == R.id.practice_mode_button) {
+			mListener.onStartPracticeGameRequested();
+		} else if (id == R.id.custom_mode_button) {
+			mListener.onStartCustomGameRequested();
 		} else if (id == R.id.show_achievements_button) {
 			mListener.onShowAchievementsRequested();
 		} else if (id == R.id.show_leaderboards_button) {

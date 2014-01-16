@@ -1,6 +1,5 @@
 package com.dan.wizardduel.duelists;
 
-import com.dan.wizardduel.GameActivity;
 import com.dan.wizardduel.GameFragment;
 import com.dan.wizardduel.combat.CombatController;
 

@@ -91,6 +91,7 @@ int id StatMeterView02 0x7f070012
 int id action_settings 0x7f070051
 int id btn_increment 0x7f07004d
 int id btn_spin 0x7f07004c
+int id custom_mode_button 0x7f070036
 int id digit_button_0 0x7f070030
 int id digit_button_1 0x7f07002d
 int id digit_button_2 0x7f07002e
@@ -102,7 +103,6 @@ int id digit_button_7 0x7f070027
 int id digit_button_8 0x7f070028
 int id digit_button_9 0x7f070029
 int id digit_button_clear 0x7f070031
-int id easy_mode_button 0x7f070035
 int id fragment_container 0x7f070024
 int id gameComplete_container 0x7f070021
 int id gameComplete_main 0x7f070023
@@ -110,7 +110,6 @@ int id gameComplete_text 0x7f070022
 int id gameGLSurfaceView1 0x7f07000e
 int id game_container 0x7f070005
 int id gestures 0x7f07000d
-int id hard_mode_button 0x7f070036
 int id hello 0x7f070034
 int id hybrid 0x7f070004
 int id iv_login_header_image 0x7f070045
@@ -127,6 +126,7 @@ int id opponentPreppedSpell2 0x7f07001f
 int id opponent_spinner0 0x7f07001c
 int id opponent_spinner1 0x7f07001e
 int id opponent_spinner2 0x7f070020
+int id practice_mode_button 0x7f070035
 int id preppedSpell0 0x7f07000a
 int id preppedSpell1 0x7f07000b
 int id preppedSpell2 0x7f07000c

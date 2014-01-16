@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.dan.wizardduel.GameActivity;
 import com.dan.wizardduel.GameFragment;
 import com.dan.wizardduel.GameGLSurfaceView;
 import com.dan.wizardduel.MainActivity;
@@ -76,7 +75,7 @@ public class CombatController implements OnGesturePerformedListener, OnGesturing
 				Toast toast = Toast.makeText(context, prediction.get(0).name,
 						Toast.LENGTH_SHORT);
 				toast.show();
-				player.spellQueue.addSpell(prediction.get(0).name);
+				player.addSpell(prediction.get(0).name);
 			}
 
 		}
@@ -165,7 +164,7 @@ public class CombatController implements OnGesturePerformedListener, OnGesturing
 			Toast toast = Toast.makeText(context, prediction.get(0).name,
 					Toast.LENGTH_SHORT);
 			toast.show();
-			player.spellQueue.addSpell(prediction.get(0).name);
+			player.addSpell(prediction.get(0).name);
 		}
 
 	}

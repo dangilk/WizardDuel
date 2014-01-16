@@ -9,6 +9,7 @@ import com.dan.wizardduel.combat.HpListener;
 import com.dan.wizardduel.duelists.Duelist;
 import com.dan.wizardduel.duelists.Npc;
 import com.dan.wizardduel.duelists.Player;
+import com.dan.wizardduel.spells.Spell;
 
 import android.support.v4.app.Fragment;
 import android.app.Activity;
@@ -45,6 +46,7 @@ public class GameFragment extends Fragment{
 	
 	public interface Listener {
         public void onGameComplete(Boolean won);
+        public void onSpellPrepped(int slot, Spell spell);
     }
 	
 	@Override
@@ -141,8 +143,14 @@ public class GameFragment extends Fragment{
 	}
 
 	public void clearHpListeners() {
-		player.cleanup();
-		opponent.cleanup();
+		if(player != null){
+			player.cleanup();
+		}
+		if(opponent != null){
+			opponent.cleanup();
+		}
+		
+		
 	}
 	
 	OnGesturePerformedListener gesturePerformedListener = new OnGesturePerformedListener() {
@@ -157,7 +165,7 @@ public class GameFragment extends Fragment{
 				Toast toast = Toast.makeText(context, prediction.get(0).name,
 						Toast.LENGTH_SHORT);
 				toast.show();
-				player.spellQueue.addSpell(prediction.get(0).name);
+				player.addSpell(prediction.get(0).name);
 			}
 
 		}

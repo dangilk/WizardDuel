@@ -359,6 +359,7 @@ containing a value of this type.
         public static final int action_settings=0x7f070051;
         public static final int btn_increment=0x7f07004d;
         public static final int btn_spin=0x7f07004c;
+        public static final int custom_mode_button=0x7f070036;
         public static final int digit_button_0=0x7f070030;
         public static final int digit_button_1=0x7f07002d;
         public static final int digit_button_2=0x7f07002e;
@@ -370,7 +371,6 @@ containing a value of this type.
         public static final int digit_button_8=0x7f070028;
         public static final int digit_button_9=0x7f070029;
         public static final int digit_button_clear=0x7f070031;
-        public static final int easy_mode_button=0x7f070035;
         public static final int fragment_container=0x7f070024;
         public static final int gameComplete_container=0x7f070021;
         public static final int gameComplete_main=0x7f070023;
@@ -378,7 +378,6 @@ containing a value of this type.
         public static final int gameGLSurfaceView1=0x7f07000e;
         public static final int game_container=0x7f070005;
         public static final int gestures=0x7f07000d;
-        public static final int hard_mode_button=0x7f070036;
         public static final int hello=0x7f070034;
         public static final int hybrid=0x7f070004;
         public static final int iv_login_header_image=0x7f070045;
@@ -395,6 +394,7 @@ containing a value of this type.
         public static final int opponent_spinner0=0x7f07001c;
         public static final int opponent_spinner1=0x7f07001e;
         public static final int opponent_spinner2=0x7f070020;
+        public static final int practice_mode_button=0x7f070035;
         public static final int preppedSpell0=0x7f07000a;
         public static final int preppedSpell1=0x7f07000b;
         public static final int preppedSpell2=0x7f07000c;

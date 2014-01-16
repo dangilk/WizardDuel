@@ -49,7 +49,7 @@
 
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/choose_difficulty"
+            android:text="Choose a play mode:"
             android:layout_marginBottom="20dp" />
 
         <LinearLayout android:orientation="horizontal"
@@ -57,16 +57,16 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <Button android:id="@+id/easy_mode_button"
+            <Button android:id="@+id/practice_mode_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/easy"
+                android:text="Practice"
                 android:layout_marginRight="20dp" />
 
-            <Button android:id="@+id/hard_mode_button"
+            <Button android:id="@+id/custom_mode_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/hard" />
+                android:text="Custom" />
 
         </LinearLayout>
 
