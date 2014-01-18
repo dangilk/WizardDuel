@@ -1,21 +1,21 @@
 package com.dan.wizardduel.duelists;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.dan.wizardduel.GameFragment;
 import com.dan.wizardduel.MainActivity;
 import com.dan.wizardduel.R;
-import com.dan.wizardduel.combat.CombatController;
+import com.dan.wizardduel.combat.Effect;
+import com.dan.wizardduel.combat.EffectSet;
 import com.dan.wizardduel.combat.HpListener;
 import com.dan.wizardduel.spells.Spell;
-import com.google.example.games.basegameutils.BaseGameActivity;
 import com.todddavies.components.progressbar.ProgressWheel;
 
 public class Duelist {
@@ -40,6 +40,7 @@ public class Duelist {
 	public CountDownTimer castTimer = null;
 	public ProgressWheel pw = null;
 	private Listener listener = null;
+	public EffectSet effectSet = new EffectSet();
 	
 	public interface Listener{
 		public void onSpellPrepped(int slot,Spell spell);
@@ -67,6 +68,14 @@ public class Duelist {
 			opponent.decHp(spell.damage);
 		}else if(spell.target == Spell.TARGET_SELF){
 			this.decHp(spell.damage);
+		}
+		
+		if(spell.effect > 0){
+			if(spell.effectTarget == Spell.TARGET_OPPONENT){
+				opponent.effectSet.addEffect(spell.effect);
+			}else if(spell.effectTarget == Spell.TARGET_SELF){
+				this.effectSet.addEffect(spell.effect);
+			}
 		}
 	}
 	

@@ -15,14 +15,15 @@ public class Spell {
 	public String name = "";
 	public int castTime = 5;
 	public String id;
-	public ArrayList<Effect> effects;
+	public int effect = 0;
+	public int effectTarget = TARGET_SELF;
 	public int damage;
 	public int target = TARGET_OPPONENT;
 	public int manaCost = 20;
-	public int icon;
+	public int icon = R.drawable.fire;
 	public static String[] allSpells = {
 			"heal",
-			"fire"
+			"fire",
 	};
 
 	
@@ -39,6 +40,12 @@ public class Spell {
 			this.target = TARGET_SELF;
 			this.manaCost = 20;
 			this.icon = R.drawable.heal;
+			this.effect = Effect.HASTE;
+		}else if(id.equalsIgnoreCase("ice")){
+			this.damage = 20;
+			this.manaCost=30;
+			this.effect = Effect.SLOW;
+			this.effectTarget = TARGET_OPPONENT;
 		}
 		Log.e("tag","spell: "+this.damage);
 	}

@@ -18,6 +18,7 @@ public class Point {
 	private static final float alphaDecay = -0.0001f;
 	private static final float minVel = -0.01f;
 	private static final float maxVel = 0.01f;
+	private static final float fuzzyRange = 10f;
 
 	
 	public float size = 10f;
@@ -28,7 +29,11 @@ public class Point {
 	float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };
 	private static Random rand = new Random();
 	
-	Point(float x, float y){
+	Point(float x, float y,Boolean fuzzy){
+		if(fuzzy){
+			x += rand.nextFloat()*fuzzyRange*2-fuzzyRange;
+			y += rand.nextFloat()*fuzzyRange*2-fuzzyRange;
+		}
 		this.coords[0]=x;
 		this.coords[1]=y;
 

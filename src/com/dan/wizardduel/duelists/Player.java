@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.dan.wizardduel.GameFragment;
 import com.dan.wizardduel.R;
 import com.dan.wizardduel.combat.CombatController;
+import com.dan.wizardduel.combat.Effect;
 import com.dan.wizardduel.spells.Spell;
 import com.google.example.games.basegameutils.BaseGameActivity;
 import com.todddavies.components.progressbar.ProgressWheel;
@@ -55,7 +56,7 @@ public class Player extends Duelist {
 			this.decMana(spell.manaCost);
 		}
 		
-		final long castTime = spell.castTime*1000;
+		final long castTime = (spell.castTime+effectSet.effectAmplitude(Effect.SLOW)-effectSet.effectAmplitude(Effect.HASTE))*1000;
 		Log.e("tag","cast spell: "+spell.damage);
 		if(spell != null){
 			castTimer = new CountDownTimer(castTime,10){

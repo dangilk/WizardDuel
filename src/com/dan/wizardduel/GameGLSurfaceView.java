@@ -42,7 +42,7 @@ public class GameGLSurfaceView extends GLSurfaceView {
             public void run() {
             	PointGroup pg = mRenderer.pointGroup;
             	for(int i=0;i<5;i++){
-            		pg.points.add(new Point(event.getX(),surfaceHeight-event.getY()+surfaceOffset[1]));
+            		pg.points.add(new Point(event.getX(),surfaceHeight-event.getY()+surfaceOffset[1],true));
             	}
             	
             }});
