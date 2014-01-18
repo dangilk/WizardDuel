@@ -24,6 +24,12 @@ public class Spell {
 	public static String[] allSpells = {
 			"heal",
 			"fire",
+			"ice",
+			"haste",
+			"poison",
+			"counter",
+			"lock",
+			"shield"
 	};
 
 	
@@ -40,12 +46,39 @@ public class Spell {
 			this.target = TARGET_SELF;
 			this.manaCost = 20;
 			this.icon = R.drawable.heal;
-			this.effect = Effect.HASTE;
 		}else if(id.equalsIgnoreCase("ice")){
 			this.damage = 20;
 			this.manaCost=30;
 			this.effect = Effect.SLOW;
 			this.effectTarget = TARGET_OPPONENT;
+			this.icon = R.drawable.ice;
+		}else if(id.equalsIgnoreCase("haste")){
+			this.damage = 0;
+			this.manaCost=20;
+			this.effect = Effect.HASTE;
+			this.target = TARGET_SELF;
+			this.icon = R.drawable.haste;
+		}else if(id.equalsIgnoreCase("poison")){
+			this.damage = 10;
+			this.manaCost=30;
+			this.effect = Effect.POISON;
+			this.effectTarget = TARGET_OPPONENT;
+			this.icon = R.drawable.poison;
+		}else if(id.equalsIgnoreCase("counter")){
+			this.damage = 0;
+			this.manaCost = 20;
+			this.icon = R.drawable.counter;
+		}else if(id.equalsIgnoreCase("lock")){
+			this.damage = 10;
+			this.manaCost = 20;
+			this.effect = Effect.LOCK;
+			this.effectTarget = TARGET_OPPONENT;
+			this.icon = R.drawable.lock;
+		}else if(id.equalsIgnoreCase("shield")){
+			this.damage = 0;
+			this.manaCost = 10;
+			this.effect = Effect.SHIELD;
+			this.icon = R.drawable.shield;
 		}
 		Log.e("tag","spell: "+this.damage);
 	}

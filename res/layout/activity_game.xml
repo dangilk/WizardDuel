@@ -72,7 +72,34 @@
         </FrameLayout>
 
     </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/userStatus"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+        
+        <LinearLayout
+        android:id="@+id/userStatusBuffs"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:orientation="horizontal" >
+     
+		</LinearLayout>
+		
+        <LinearLayout
+            android:id="@+id/userStatusDebuffs"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:gravity="right"
+            android:orientation="horizontal" >
 
+     
+		</LinearLayout>
+     
+	</LinearLayout>
+	
     <android.gesture.GestureOverlayView
         android:id="@+id/gestures"
         android:layout_width="fill_parent"
@@ -283,5 +310,32 @@
         </FrameLayout>
 
     </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/opponentStatus"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+        
+        <LinearLayout
+        android:id="@+id/opponentStatusBuffs"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:orientation="horizontal" >
+     
+		</LinearLayout>
+		
+        <LinearLayout
+            android:id="@+id/opponentStatusDebuffs"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:gravity="right"
+            android:orientation="horizontal" >
+
+     
+		</LinearLayout>
+     
+	</LinearLayout>
 
 </LinearLayout>

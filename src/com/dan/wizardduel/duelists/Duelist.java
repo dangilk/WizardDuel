@@ -1,13 +1,13 @@
 package com.dan.wizardduel.duelists;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.dan.wizardduel.GameFragment;
 import com.dan.wizardduel.MainActivity;
@@ -40,7 +40,10 @@ public class Duelist {
 	public CountDownTimer castTimer = null;
 	public ProgressWheel pw = null;
 	private Listener listener = null;
-	public EffectSet effectSet = new EffectSet();
+	public EffectSet effectSet;
+	
+	public LinearLayout buffLV;
+	public LinearLayout debuffLV;
 	
 	public interface Listener{
 		public void onSpellPrepped(int slot,Spell spell);
@@ -53,6 +56,7 @@ public class Duelist {
 		spells.add(null);
 		spells.add(null);
 		spells.add(null);	
+		effectSet = new EffectSet(this);
 	}
 	
 	public void clearHpListeners(){
@@ -90,6 +94,10 @@ public class Duelist {
 	}
 	
 	public void decHp(int amt){
+		if(effectSet.hasEffect(Effect.SHIELD)){
+			effectSet.removeEffect(Effect.SHIELD);
+			return;
+		}
 		health -= amt;
 		if (health <= 0){
 			health = 0;
@@ -100,16 +108,6 @@ public class Duelist {
 		healthBar.setPercentFull(health*100/maxHealth);
 	}
 	
-	public void incHp(int amt){
-		health += amt;
-		if (health <= 0){
-			health = 0;
-		}else if(health >= maxHealth){
-			health = maxHealth;
-		}
-		notifyHpListeners();
-		healthBar.setPercentFull(health*100/maxHealth);
-	}
 	
 	public void decMana(int amt) {
 		// TODO Auto-generated method stub
@@ -143,12 +141,10 @@ public class Duelist {
 		}
 	}
 	
-	
 	public void setListener(Listener l){
 		this.listener = l;
 	}
 	
-
 	public Integer randomFilledSlot(){
 		Integer index = MainActivity.random.nextInt(QUEUE_SIZE);
 		int count = 0;
@@ -196,5 +192,20 @@ public class Duelist {
 	public void removeSpell(int slot){
 		spells.set(slot,null);
 		spellIVs.get(slot).setImageResource(R.drawable.common_signin_btn_icon_disabled_dark);
+	}
+	
+	protected Boolean castSpellCheck(int slot, Spell spell){
+		if(spell == null){
+			return false;
+		}
+		if(effectSet.hasEffect(Effect.LOCK) && slot == 0){
+			return false;
+		}
+		if(this.mana < spell.manaCost){
+			return false;
+		}else{
+			this.decMana(spell.manaCost);
+		}
+		return true;
 	}
 }

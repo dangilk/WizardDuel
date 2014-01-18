@@ -8,14 +8,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.dan.wizardduel.GameFragment;
 import com.dan.wizardduel.MainActivity;
 import com.dan.wizardduel.R;
-import com.dan.wizardduel.combat.CombatController;
 import com.dan.wizardduel.combat.Effect;
 import com.dan.wizardduel.spells.Spell;
-import com.google.example.games.basegameutils.BaseGameActivity;
 import com.todddavies.components.progressbar.ProgressWheel;
 
 public class Npc extends Duelist {
@@ -47,6 +46,9 @@ public class Npc extends Duelist {
 		spinWheels.add((ProgressWheel)context.findViewById(R.id.opponent_spinner0));
 		spinWheels.add((ProgressWheel)context.findViewById(R.id.opponent_spinner1));
 		spinWheels.add((ProgressWheel)context.findViewById(R.id.opponent_spinner2));
+		
+		buffLV = (LinearLayout)context.findViewById(R.id.opponentStatusBuffs);
+		debuffLV = (LinearLayout)context.findViewById(R.id.opponentStatusDebuffs);
 	}
 	
 	private Handler prepSpellHandler = new Handler(){
@@ -79,13 +81,9 @@ public class Npc extends Duelist {
 	
 	public void castSpell(final int slot){
 		final Spell spell = spells.get(slot);
-		if(spell == null){
+		Boolean valid = castSpellCheck(slot,spell);
+		if(!valid){
 			return;
-		}
-		if(this.mana < spell.manaCost){
-			return;
-		}else{
-			this.decMana(spell.manaCost);
 		}
 		final ProgressWheel pw = spinWheels.get(slot);
 		

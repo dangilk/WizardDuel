@@ -7,13 +7,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.dan.wizardduel.GameFragment;
 import com.dan.wizardduel.R;
-import com.dan.wizardduel.combat.CombatController;
 import com.dan.wizardduel.combat.Effect;
 import com.dan.wizardduel.spells.Spell;
-import com.google.example.games.basegameutils.BaseGameActivity;
 import com.todddavies.components.progressbar.ProgressWheel;
 
 public class Player extends Duelist {
@@ -40,6 +39,9 @@ public class Player extends Duelist {
 		spellIVs.get(0).setOnTouchListener(spellTouchListener(0));
 		spellIVs.get(1).setOnTouchListener(spellTouchListener(1));
 		spellIVs.get(2).setOnTouchListener(spellTouchListener(2));
+		
+		buffLV = (LinearLayout)context.findViewById(R.id.userStatusBuffs);
+		debuffLV = (LinearLayout)context.findViewById(R.id.userStatusDebuffs);
 
 		pw = (ProgressWheel) context.findViewById(R.id.pw_spinner);
 	}
@@ -47,15 +49,10 @@ public class Player extends Duelist {
 	
 	public void castSpell(final int slot){
 		final Spell spell = spells.get(slot);
-		if(spell == null){
+		Boolean valid = castSpellCheck(slot,spell);
+		if(!valid){
 			return;
 		}
-		if(this.mana < spell.manaCost){
-			return;
-		}else{
-			this.decMana(spell.manaCost);
-		}
-		
 		final long castTime = (spell.castTime+effectSet.effectAmplitude(Effect.SLOW)-effectSet.effectAmplitude(Effect.HASTE))*1000;
 		Log.e("tag","cast spell: "+spell.damage);
 		if(spell != null){

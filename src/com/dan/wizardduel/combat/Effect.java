@@ -1,5 +1,10 @@
 package com.dan.wizardduel.combat;
 
+import android.os.Handler;
+import android.os.Message;
+
+import com.dan.wizardduel.duelists.Duelist;
+
 public class Effect {
 
 	public int type;
@@ -38,4 +43,30 @@ public class Effect {
 		}
 		return false;
 	}
+	
+	public void startPoison(Duelist duelist){
+		Message mes = new Message();
+		mes.obj = duelist;
+		poisonTickHandler.sendMessageDelayed(mes, 1000);
+	}
+	
+	public void stopPoison(Duelist duelist){
+		poisonTickHandler.removeCallbacksAndMessages(null);
+	}
+	
+
+	public Handler poisonTickHandler = new Handler(){
+		public void handleMessage(Message m){
+			Duelist duelist = (Duelist)m.obj;
+			if(isExpired()){
+				stopPoison(duelist);
+				return;
+			}
+			duelist.decHp(amplitude);
+			Message mes = new Message();
+			mes.obj = duelist;
+			poisonTickHandler.sendMessageDelayed(mes, 1000);
+		}
+	};
+	
 }
