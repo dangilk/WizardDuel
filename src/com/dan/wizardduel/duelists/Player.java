@@ -44,6 +44,13 @@ public class Player extends Duelist {
 		debuffLV = (LinearLayout)context.findViewById(R.id.userStatusDebuffs);
 
 		pw = (ProgressWheel) context.findViewById(R.id.pw_spinner);
+		addEffect(Effect.HASTE);
+		addEffect(Effect.SHIELD);
+		//addEffect(Effect.POISON);
+		//addEffect(Effect.LOCK);
+		//addEffect(Effect.HASTE);
+		//call last
+		postInit();
 	}
 
 	
@@ -53,7 +60,7 @@ public class Player extends Duelist {
 		if(!valid){
 			return;
 		}
-		final long castTime = (spell.castTime+effectSet.effectAmplitude(Effect.SLOW)-effectSet.effectAmplitude(Effect.HASTE))*1000;
+		final long castTime = (spell.castTime+this.effectAmplitude(Effect.SLOW)-this.effectAmplitude(Effect.HASTE))*1000;
 		Log.e("tag","cast spell: "+spell.damage);
 		if(spell != null){
 			castTimer = new CountDownTimer(castTime,10){

@@ -182,7 +182,6 @@ public class MainActivity extends BaseGameActivity
 
     @Override
     public void onSignInButtonClicked() {
-
         // start the sign-in flow
         beginUserInitiatedSignIn();
     }
@@ -197,10 +196,11 @@ public class MainActivity extends BaseGameActivity
 
     @Override
     public void onSignInFailed() {
+    	Log.e("tag","sign in failed");
 		if(mMainMenuFragment == null){
 			return;
 		}
-		Log.e("tag","sign in failed");
+		
         // Sign-in failed, so show sign-in button on main menu
         mMainMenuFragment.setGreeting(getString(R.string.signed_out_greeting));
         mMainMenuFragment.setShowSignInButton(true);
@@ -209,11 +209,12 @@ public class MainActivity extends BaseGameActivity
 
     @Override
     public void onSignInSucceeded() {
+    	Log.e("tag","sign in success");
     	if(mMainMenuFragment == null){
 			return;
 		}
     	
-    	Log.e("tag","sign in success");
+    	
     	
     	if (getInvitationId() != null) {
             RoomConfig.Builder roomConfigBuilder =
@@ -385,6 +386,7 @@ public class MainActivity extends BaseGameActivity
 	
 	@Override
 	public void onActivityResult(int request, int response, Intent data) {
+		super.onActivityResult(request, response, data);
 	    if (request == RC_INVITATION_INBOX) {
 	        if (response != Activity.RESULT_OK) {
 	            // canceled

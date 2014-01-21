@@ -87,7 +87,7 @@ public class Npc extends Duelist {
 		}
 		final ProgressWheel pw = spinWheels.get(slot);
 		
-		final long castTime = (spell.castTime+effectSet.effectAmplitude(Effect.SLOW)-effectSet.effectAmplitude(Effect.HASTE))*1000;
+		final long castTime = (spell.castTime+this.effectAmplitude(Effect.SLOW)-this.effectAmplitude(Effect.HASTE))*1000;
 		if(spell != null){
 			castTimer = new CountDownTimer(castTime,10){
 

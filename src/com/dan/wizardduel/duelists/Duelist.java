@@ -1,11 +1,14 @@
 package com.dan.wizardduel.duelists;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -13,7 +16,6 @@ import com.dan.wizardduel.GameFragment;
 import com.dan.wizardduel.MainActivity;
 import com.dan.wizardduel.R;
 import com.dan.wizardduel.combat.Effect;
-import com.dan.wizardduel.combat.EffectSet;
 import com.dan.wizardduel.combat.HpListener;
 import com.dan.wizardduel.spells.Spell;
 import com.todddavies.components.progressbar.ProgressWheel;
@@ -32,6 +34,7 @@ public class Duelist {
 	public static final int QUEUE_SIZE = 3;
 	public ArrayList<Spell> spells = new ArrayList<Spell>();
 	public ArrayList<ImageView> spellIVs = new ArrayList<ImageView>();
+	
 	public String owner = "player";
 	public GameFragment gameFragment;
 	public View context;
@@ -40,10 +43,12 @@ public class Duelist {
 	public CountDownTimer castTimer = null;
 	public ProgressWheel pw = null;
 	private Listener listener = null;
-	public EffectSet effectSet;
 	
+	/*effects*/
 	public LinearLayout buffLV;
 	public LinearLayout debuffLV;
+	public HashMap<Integer,Effect> effects = new HashMap<Integer,Effect>();
+	public HashMap<Integer,ImageView> effectIcons = new HashMap<Integer,ImageView>();
 	
 	public interface Listener{
 		public void onSpellPrepped(int slot,Spell spell);
@@ -56,7 +61,7 @@ public class Duelist {
 		spells.add(null);
 		spells.add(null);
 		spells.add(null);	
-		effectSet = new EffectSet(this);
+		
 	}
 	
 	public void clearHpListeners(){
@@ -64,7 +69,6 @@ public class Duelist {
 	}
 	
 	protected void postInit(){
-		
 	}
 	
 	public void executeSpell(Duelist opponent, Spell spell){
@@ -76,9 +80,9 @@ public class Duelist {
 		
 		if(spell.effect > 0){
 			if(spell.effectTarget == Spell.TARGET_OPPONENT){
-				opponent.effectSet.addEffect(spell.effect);
+				opponent.addEffect(spell.effect);
 			}else if(spell.effectTarget == Spell.TARGET_SELF){
-				this.effectSet.addEffect(spell.effect);
+				this.addEffect(spell.effect);
 			}
 		}
 	}
@@ -94,8 +98,8 @@ public class Duelist {
 	}
 	
 	public void decHp(int amt){
-		if(effectSet.hasEffect(Effect.SHIELD)){
-			effectSet.removeEffect(Effect.SHIELD);
+		if(hasEffect(Effect.SHIELD)){
+			removeEffect(Effect.SHIELD);
 			return;
 		}
 		health -= amt;
@@ -139,6 +143,7 @@ public class Duelist {
 		if(castTimer != null){
 			castTimer.cancel();
 		}
+		cleanupEffects();
 	}
 	
 	public void setListener(Listener l){
@@ -198,7 +203,7 @@ public class Duelist {
 		if(spell == null){
 			return false;
 		}
-		if(effectSet.hasEffect(Effect.LOCK) && slot == 0){
+		if(hasEffect(Effect.LOCK) && slot == 0){
 			return false;
 		}
 		if(this.mana < spell.manaCost){
@@ -207,5 +212,74 @@ public class Duelist {
 			this.decMana(spell.manaCost);
 		}
 		return true;
+	}
+	
+	public Boolean hasEffect(int effect){
+		Effect e = effects.get(effect);
+		if(e == null){
+			return false;
+		}
+		if(e.isExpired()){
+			removeEffect(effect);
+			return false;
+		}
+		return true;
+	}
+	
+	public int effectAmplitude(int effect){
+		Effect e = effects.get(effect);
+		if(e!=null && hasEffect(effect)){
+			return e.amplitude;
+		}
+		return 0;
+	}
+	
+	public void addEffect(int effect){
+		Log.e("tag","add effect: "+effect);
+		//reset existing effect
+		removeEffect(effect);
+		Effect e = new Effect(effect);
+		effects.put(effect,e);
+		e.startHandlers(this);
+		ImageView iv = new ImageView(context.getContext());
+		iv.setImageResource(e.icon);
+		iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+		iv.setAdjustViewBounds(true);
+		effectIcons.put(effect, iv);
+		if(e.buff){
+			Log.e("tag","add buff view: "+effect);
+			buffLV.addView(iv);
+		}else{
+			Log.e("tag","add debuff view: "+effect);
+			debuffLV.addView(iv);
+		}
+		
+	}
+	
+	public void removeEffect(int effect){
+		Log.e("tag","remove effect: "+effect);
+		Effect e = effects.get(effect);
+		effects.remove(effect);
+		ImageView icon = effectIcons.get(effect);
+		effectIcons.remove(effect);
+		if(e != null){
+			e.clearHandlers();
+			if(icon != null){
+				if(e.buff){
+					Log.e("tag","remove buff view: "+effect);
+					buffLV.removeView(icon);
+				}else{
+					Log.e("tag","remove debuff view: "+effect);
+					debuffLV.removeView(icon);
+				}
+			}
+			
+		}
+	}
+	
+	public void cleanupEffects(){
+		for(Effect e : effects.values()){
+			e.clearHandlers();
+		}
 	}
 }

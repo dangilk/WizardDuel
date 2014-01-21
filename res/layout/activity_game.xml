@@ -3,6 +3,7 @@
     xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
+    android:background="#000000"
     android:orientation="vertical"
     android:id="@+id/game_container">
 
@@ -73,32 +74,38 @@
 
     </LinearLayout>
     
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/userStatus"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal" >
-        
-        <LinearLayout
-        android:id="@+id/userStatusBuffs"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
+        android:gravity="center_horizontal"
+        
         android:orientation="horizontal" >
-     
-		</LinearLayout>
-		
+
+        <LinearLayout
+            android:id="@+id/userStatusBuffs"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:gravity="left"
+            android:orientation="horizontal" >
+            
+
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/userStatusDebuffs"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:gravity="right"
             android:orientation="horizontal" >
 
+        </LinearLayout>
      
-		</LinearLayout>
-     
-	</LinearLayout>
+	</RelativeLayout>
 	
     <android.gesture.GestureOverlayView
         android:id="@+id/gestures"
@@ -311,31 +318,32 @@
 
     </LinearLayout>
     
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/opponentStatus"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal" >
-        
+
         <LinearLayout
-        android:id="@+id/opponentStatusBuffs"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:orientation="horizontal" >
-     
-		</LinearLayout>
-		
+            android:id="@+id/opponentStatusBuffs"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal" >
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/opponentStatusDebuffs"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:gravity="right"
             android:orientation="horizontal" >
-
+        </LinearLayout>
      
-		</LinearLayout>
-     
-	</LinearLayout>
+	</RelativeLayout>
 
 </LinearLayout>
