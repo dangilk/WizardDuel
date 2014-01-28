@@ -17,38 +17,19 @@ import com.dan.wizardduel.combat.Effect;
 import com.dan.wizardduel.spells.Spell;
 import com.todddavies.components.progressbar.ProgressWheel;
 
-public class Npc extends Duelist {
+public class Npc extends Opponent {
 	
-	public ArrayList<ProgressWheel> spinWheels = new ArrayList<ProgressWheel>();
+	
 	private Npc self;
 
 	public Npc(GameFragment gameFragment) {
 		// TODO Auto-generated constructor stub
 		super(gameFragment);
 		self = this;
-		//spellQueue = new OpponentSpellQueue(gameFragment, this);
-		healthBar = (StatMeterView) gameFragment.getView().findViewById(R.id.opponentHealthBar);
-		manaBar = (StatMeterView) gameFragment.getView().findViewById(R.id.opponentManaBar);
-		manaBar.color = Color.BLUE;
+		
 		prepSpellHandler.sendMessageDelayed(new Message(), 3000);
 		castSpellHandler.sendMessageDelayed(new Message(), 10000);
-		image = R.drawable.red;
-		ImageView iv = (ImageView)gameFragment.getView().findViewById(R.id.opponentImage);
-		iv.setImageResource(image);
-		postInit();
-		///////
-		context = gameFragment.getView();
-		// TODO Auto-generated constructor stub
-		spellIVs.add((ImageView) context.findViewById(R.id.opponentPreppedSpell0));
-		spellIVs.add((ImageView) context.findViewById(R.id.opponentPreppedSpell1));
-		spellIVs.add((ImageView) context.findViewById(R.id.opponentPreppedSpell2));
 		
-		spinWheels.add((ProgressWheel)context.findViewById(R.id.opponent_spinner0));
-		spinWheels.add((ProgressWheel)context.findViewById(R.id.opponent_spinner1));
-		spinWheels.add((ProgressWheel)context.findViewById(R.id.opponent_spinner2));
-		
-		buffLV = (LinearLayout)context.findViewById(R.id.opponentStatusBuffs);
-		debuffLV = (LinearLayout)context.findViewById(R.id.opponentStatusDebuffs);
 	}
 	
 	private Handler prepSpellHandler = new Handler(){
@@ -59,7 +40,7 @@ public class Npc extends Duelist {
 	};
 	
 	private void prepRandomSpell(){
-		String randId = Spell.allSpells[MainActivity.random.nextInt(Spell.allSpells.length)];
+		String randId = Spell.randomSpell();
 		this.addSpell(randId);
 	}
 	

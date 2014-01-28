@@ -75,12 +75,12 @@ public class Effect {
 		removeEffectHandler.sendMessageDelayed(mes, effect.duration);
 	}
 	
-	public void stopPoison(Duelist duelist){
+	public void stopPoison(){
 		poisonTickHandler.removeCallbacksAndMessages(null);
 	}
 	
 	public void clearHandlers(){
-		poisonTickHandler.removeCallbacksAndMessages(null);
+		stopPoison();
 		removeEffectHandler.removeCallbacksAndMessages(null);
 	}
 	
@@ -91,7 +91,7 @@ public class Effect {
 		removeDelayed(duelist,this);
 	}
 	
-	public static Handler removeEffectHandler = new Handler(){
+	public Handler removeEffectHandler = new Handler(){
 		public void handleMessage(Message m){
 			Duelist duelist = (Duelist)m.obj;
 			int effect = m.arg1;
@@ -104,7 +104,7 @@ public class Effect {
 		public void handleMessage(Message m){
 			Duelist duelist = (Duelist)m.obj;
 			if(isExpired()){
-				stopPoison(duelist);
+				stopPoison();
 				return;
 			}
 			duelist.decHp(amplitude);

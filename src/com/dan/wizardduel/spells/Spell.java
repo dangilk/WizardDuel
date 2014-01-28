@@ -1,10 +1,11 @@
 package com.dan.wizardduel.spells;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.Collection;
 
+import utils.BiMap;
 import android.util.Log;
 
+import com.dan.wizardduel.MainActivity;
 import com.dan.wizardduel.R;
 import com.dan.wizardduel.combat.Effect;
 
@@ -12,7 +13,6 @@ public class Spell {
 
 	public static final int TARGET_SELF = 0;
 	public static final int TARGET_OPPONENT= 1;
-	public String name = "";
 	public int castTime = 5;
 	public String id;
 	public int effect = 0;
@@ -21,22 +21,22 @@ public class Spell {
 	public int target = TARGET_OPPONENT;
 	public int manaCost = 20;
 	public int icon = R.drawable.fire;
-	public static String[] allSpells = {
-			"heal",
-			"fire",
-			"ice",
-			"haste",
-			"poison",
-			"counter",
-			"lock",
-			"shield"
-	};
+	public int intId = 0;
 
+	public static final BiMap<String,Integer> spells;
+	static{
+		spells = new BiMap<String,Integer>();
+		spells.put("heal", 1);
+		spells.put("fire",2);
+		spells.put("ice", 3);
+		spells.put("haste",4);
+		spells.put("poison", 5);
+		spells.put("counter", 6);
+		spells.put("lock", 7);
+		spells.put("shield",8);
+	}
 	
-	public Spell(String id){
-		this.name = id;
-		this.id = id;
-		Log.e("tag","spell: "+id);
+	private void initSpell(String id){
 		if(id.equalsIgnoreCase("fire")){
 			this.damage = 50;
 			this.manaCost = 50;
@@ -80,6 +80,34 @@ public class Spell {
 			this.effect = Effect.SHIELD;
 			this.icon = R.drawable.shield;
 		}
-		Log.e("tag","spell: "+this.damage);
 	}
+	
+	public static String randomSpell(){
+		int rand = MainActivity.random.nextInt(Spell.spells.size());
+		Collection<String> ids = spells.keys();
+		int i=0;
+		for(String s: ids){
+			if(i==rand){
+				return s;
+			}
+			i++;
+		}
+		return null;
+	}
+	
+	public Spell(int intId){
+		Log.e("tag","init spell: "+intId);
+		this.intId = intId;
+		this.id = spells.getKey(intId);
+		initSpell(id);
+	}
+
+	
+	public Spell(String id){
+		this.id = id;
+		this.intId = spells.get(id);
+		initSpell(id);
+	}
+	
+	
 }

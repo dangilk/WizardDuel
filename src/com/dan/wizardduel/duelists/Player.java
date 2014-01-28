@@ -16,15 +16,9 @@ import com.dan.wizardduel.spells.Spell;
 import com.todddavies.components.progressbar.ProgressWheel;
 
 public class Player extends Duelist {
-		
-	public interface Listener{
-		public void onSpellPrepped(int slot,Spell spell);
-	}
-
+	
 	public Player(GameFragment gameFragment) {
 		super(gameFragment);
-		//spellQueue = new PlayerSpellQueue(gameFragment,this);
-		//spellQueue.setListener(this);
 		healthBar = (StatMeterView) gameFragment.getView().findViewById(R.id.userHealthBar);
 		manaBar = (StatMeterView) gameFragment.getView().findViewById(R.id.userManaBar);
 		manaBar.color = Color.BLUE;
@@ -44,13 +38,13 @@ public class Player extends Duelist {
 		debuffLV = (LinearLayout)context.findViewById(R.id.userStatusDebuffs);
 
 		pw = (ProgressWheel) context.findViewById(R.id.pw_spinner);
-		addEffect(Effect.HASTE);
-		addEffect(Effect.SHIELD);
-		//addEffect(Effect.POISON);
-		//addEffect(Effect.LOCK);
-		//addEffect(Effect.HASTE);
-		//call last
+
 		postInit();
+	}
+	
+	public Player(GameFragment gameFragment, String playerId){
+		this(gameFragment);
+		this.playerId = playerId;
 	}
 
 	
@@ -67,7 +61,9 @@ public class Player extends Duelist {
 
 				@Override
 				public void onFinish() {
-					// TODO Auto-generated method stub
+					if(duelistListener != null){
+						duelistListener.onSpellExecuted(slot, spell);
+					}
 					gameFragment.player.executeSpell(gameFragment.opponent,spell);
 					removeSpell(slot);
 					pw.setVisibility(View.GONE);
@@ -85,6 +81,9 @@ public class Player extends Duelist {
 
 				
 			};
+			if(duelistListener != null){
+				duelistListener.onSpellCasting(slot);
+			}
 			castTimer.start();
 			pw.setVisibility(View.VISIBLE);
 		}
@@ -98,6 +97,9 @@ public class Player extends Duelist {
 					castSpell(slot);
 				}else if(event.getAction() == MotionEvent.ACTION_UP){
 					if(castTimer != null){
+						if(duelistListener != null){
+							duelistListener.onSpellCastCanceled(slot);
+						}
 						castTimer.cancel();
 						pw.setVisibility(View.GONE);
 						pw.setProgress(0);

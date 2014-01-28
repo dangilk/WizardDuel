@@ -23,13 +23,17 @@ import java.util.Random;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.dan.wizardduel.duelists.PlayerOpponent;
+import com.dan.wizardduel.spells.Spell;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.Player;
 import com.google.android.gms.games.multiplayer.Invitation;
+import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
 import com.google.android.gms.games.multiplayer.realtime.Room;
@@ -37,9 +41,6 @@ import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.example.games.basegameutils.BaseGameActivity;
-import com.dan.wizardduel.R;
-import com.dan.wizardduel.combat.CombatController;
-import com.dan.wizardduel.spells.Spell;
 
 public class MainActivity extends BaseGameActivity
         implements MainMenuFragment.Listener,
@@ -67,6 +68,8 @@ public class MainActivity extends BaseGameActivity
     
     public MainMenuFragment mMainMenuFragment = null;
     public GameFragment gameFragment;
+    
+    public GamesClient gameClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,8 @@ public class MainActivity extends BaseGameActivity
         // add initial fragment (welcome fragment)
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,
                 mMainMenuFragment).commit();
+        
+        gameClient = this.mHelper.getGamesClient();
 
         // IMPORTANT: if this Activity supported rotation, we'd have to be
         // more careful about adding the fragment, since the fragment would
@@ -100,7 +105,7 @@ public class MainActivity extends BaseGameActivity
     // Switch UI to the given fragment
     public void switchToFragment(Fragment newFrag) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, newFrag)
-                .commit();
+                .commitAllowingStateLoss();
     }
     
     @Override
@@ -112,6 +117,7 @@ public class MainActivity extends BaseGameActivity
 
     @Override
     public void onStartPracticeGameRequested() {
+    	gameFragment.npcGame = true;
     	switchToFragment(gameFragment);
     }
     
@@ -246,6 +252,26 @@ public class MainActivity extends BaseGameActivity
         mMainMenuFragment.setGreeting("Hello, " + displayName);
 
     }
+    
+    /*
+     * 
+     * sample execution order:
+   		second of two players joins room:
+		room created
+		peer joined
+		room connecting
+		p2p connected
+		connected to room
+		peers connected
+		room connected
+		
+		
+		second player leaves:
+			disconnected from room
+			peer left
+ 			peers disconnected
+
+     */
 
 	@Override
 	public void onGameComplete(Boolean won) {
@@ -338,10 +364,18 @@ public class MainActivity extends BaseGameActivity
 	}
 
 	@Override
-	public void onRealTimeMessageReceived(RealTimeMessage arg0) {
+	public void onRealTimeMessageReceived(RealTimeMessage rtm) {
 		Log.e("tag","real time message received");
-		// TODO Auto-generated method stub
-		
+		byte[] bytes = rtm.getMessageData();
+		if(bytes[0]==MESSAGE_SPELL_PREPPED){
+			gameFragment.opponent.addSpellAt((int)bytes[1], (int)bytes[2]);
+		}else if(bytes[0] == MESSAGE_SPELL_CASTING){
+			((PlayerOpponent)gameFragment.opponent).castSpell((int)bytes[1]);
+		}else if(bytes[0] == MESSAGE_SPELL_CAST_CANCELED){
+			((PlayerOpponent)gameFragment.opponent).castSpellCanceled((int)bytes[1]);
+		}else if(bytes[0] == MESSAGE_SPELL_EXECUTED){
+			((PlayerOpponent)gameFragment.opponent).executeSpell(new Spell((int)bytes[2]));
+		}
 	}
 
 	@Override
@@ -365,9 +399,29 @@ public class MainActivity extends BaseGameActivity
 	}
 
 	@Override
-	public void onRoomConnected(int arg0, Room arg1) {
+	public void onRoomConnected(int status, Room room) {
 		Log.e("tag","room connected");
 		// TODO Auto-generated method stub
+		String playerId = gameClient.getCurrentPlayerId();
+		playerId = room.getParticipantId(playerId);
+		for (Participant p : room.getParticipants()) {
+	        String pid = p.getParticipantId();
+	        if (pid != playerId) {
+	            gameFragment.npcGame = false;
+	            gameFragment.playerId = playerId;
+	            gameFragment.opponentId = pid;
+	            gameFragment.roomId = room.getRoomId();
+	            Runnable r = new Runnable() {
+	                @Override
+	                public void run() {
+	                	switchToFragment(gameFragment);
+	                }
+	            };
+	            Handler h = new Handler();
+	            h.post(r);
+	            
+	        }
+	    }
 		
 	}
 
@@ -429,7 +483,7 @@ public class MainActivity extends BaseGameActivity
 	        if (minAutoMatchPlayers > 0) {
 	            autoMatchCriteria =
 	                RoomConfig.createAutoMatchCriteria(
-	                    minAutoMatchPlayers, maxAutoMatchPlayers, 0);
+	                    1,1,0);//minAutoMatchPlayers, maxAutoMatchPlayers, 0);
 	        } else {
 	            autoMatchCriteria = null;
 	        }
@@ -447,11 +501,46 @@ public class MainActivity extends BaseGameActivity
 	        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	    }
 	}
+	
+	private static final byte MESSAGE_SPELL_PREPPED = 0;
+	private static final byte MESSAGE_SPELL_CASTING = 1;
+	private static final byte MESSAGE_SPELL_CAST_CANCELED = 2;
+	private static final byte MESSAGE_SPELL_EXECUTED = 3;
 
 	@Override
 	public void onSpellPrepped(int slot, Spell spell) {
-		// TODO Auto-generated method stub
-		
+		byte[] bytes = new byte[3];
+		bytes[0] = MESSAGE_SPELL_PREPPED;
+		bytes[1]= (byte)slot;
+		bytes[2] = (byte)spell.intId;
+		Log.e("tag","spell prepped send message"+gameFragment.opponent.playerId);
+		gameClient.sendUnreliableRealTimeMessage( bytes, gameFragment.roomId, gameFragment.opponent.playerId);
+	}
+
+	@Override
+	public void onSpellCasting(int slot) {
+		byte[] bytes = new byte[2];
+		bytes[0] = MESSAGE_SPELL_CASTING;
+		bytes[1]= (byte)slot;
+		gameClient.sendUnreliableRealTimeMessage( bytes, gameFragment.roomId, gameFragment.opponent.playerId);
+	}
+
+	@Override
+	public void onSpellCastCanceled(int slot) {
+		byte[] bytes = new byte[2];
+		bytes[0] = MESSAGE_SPELL_CAST_CANCELED;
+		bytes[1]= (byte)slot;
+		gameClient.sendUnreliableRealTimeMessage( bytes, gameFragment.roomId, gameFragment.opponent.playerId);
+	}
+
+	@Override
+	public void onSpellExecuted(int slot, Spell spell) {
+		byte[] bytes = new byte[3];
+		bytes[0] = MESSAGE_SPELL_EXECUTED;
+		bytes[1]= (byte)slot;
+		bytes[2] = (byte)spell.intId;
+		Log.e("tag","spell executed send message"+gameFragment.opponent.playerId);
+		gameClient.sendUnreliableRealTimeMessage( bytes, gameFragment.roomId, gameFragment.opponent.playerId);
 	}
     
 }

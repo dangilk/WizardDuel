@@ -9,6 +9,7 @@ import com.dan.wizardduel.combat.HpListener;
 import com.dan.wizardduel.duelists.Duelist;
 import com.dan.wizardduel.duelists.Npc;
 import com.dan.wizardduel.duelists.Player;
+import com.dan.wizardduel.duelists.PlayerOpponent;
 import com.dan.wizardduel.spells.Spell;
 
 import android.support.v4.app.Fragment;
@@ -28,7 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-public class GameFragment extends Fragment{
+public class GameFragment extends Fragment implements Player.Listener{
 	
 	public GameGLSurfaceView mGLView;
 	public GestureOverlayView gestureOverlayView;
@@ -44,9 +45,17 @@ public class GameFragment extends Fragment{
 	public View combatView;
 	Listener gameListener = null;
 	
+	public String roomId = null;
+	public Boolean npcGame = true;
+	public String playerId = null;
+	public String opponentId = null;
+	
 	public interface Listener {
         public void onGameComplete(Boolean won);
         public void onSpellPrepped(int slot, Spell spell);
+        public void onSpellCasting(int slot);
+        public void onSpellCastCanceled(int slot);
+        public void onSpellExecuted(int slot, Spell spell);
     }
 	
 	@Override
@@ -101,10 +110,24 @@ public class GameFragment extends Fragment{
 	
 	public void initGame() {
 		Log.e("tag", "INIT GAME");
+		if(npcGame){
+			setupNpcGame();
+		}else{
+			setupMultiplayerGame(playerId,opponentId);
+		}
+		addHpListeners();
+	}
+	
+	public void setupNpcGame(){
 		this.player = new Player(this);
 		this.opponent = new Npc(this);
-		addHpListeners();
-		
+		this.opponent.setListener(null);
+	}
+	
+	public void setupMultiplayerGame(String playerId, String opponentId){
+		this.player = new Player(this,playerId);
+		this.opponent = new PlayerOpponent(this,opponentId);
+		this.player.setListener(this);
 	}
 	
 
@@ -149,8 +172,6 @@ public class GameFragment extends Fragment{
 		if(opponent != null){
 			opponent.cleanup();
 		}
-		
-		
 	}
 	
 	OnGesturePerformedListener gesturePerformedListener = new OnGesturePerformedListener() {
@@ -166,6 +187,7 @@ public class GameFragment extends Fragment{
 						Toast.LENGTH_SHORT);
 				toast.show();
 				player.addSpell(prediction.get(0).name);
+				
 			}
 
 		}
@@ -183,6 +205,26 @@ public class GameFragment extends Fragment{
 			mGLView.forceFade();
 		}
 	};
+
+	@Override
+	public void onSpellPrepped(int slot, Spell spell) {
+		gameListener.onSpellPrepped(slot, spell);
+	}
+
+	@Override
+	public void onSpellCasting(int slot) {
+		gameListener.onSpellCasting(slot);
+	}
+
+	@Override
+	public void onSpellCastCanceled(int slot) {
+		gameListener.onSpellCastCanceled(slot);
+	}
+
+	@Override
+	public void onSpellExecuted(int slot, Spell spell) {
+		gameListener.onSpellExecuted(slot, spell);
+	}
 	
 	
 }
