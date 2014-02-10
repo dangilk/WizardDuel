@@ -15,122 +15,206 @@
    limitations under the License.
 -->
 
+
 <!-- MAIN MENU -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/screen_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/screen_menu"
-    android:gravity="center">
+    android:gravity="center" >
 
-    <TextView android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="10dp"
-            android:padding="20dp"
-            android:textColor="#ffffff"
-            android:background="#d54937" />
-
-    <LinearLayout android:orientation="vertical"
+    <TextView
+        android:id="@+id/tvGameResult"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        android:background="#d54937"
         android:gravity="center"
-        android:padding="20dp">
+        android:padding="20dp"
+        android:text="@string/app_name"
+        android:textColor="#ffffff"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
-        <TextView android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginBottom="10dp"
-            android:id="@+id/hello" />
-
-        <TextView android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Choose a play mode:"
-            android:layout_marginBottom="20dp" />
-
-        <LinearLayout android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <Button android:id="@+id/practice_mode_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Practice"
-                android:layout_marginRight="20dp" />
-
-            <Button android:id="@+id/custom_mode_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Custom" />
-
-        </LinearLayout>
-
-        <TextView android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/see_your_progress"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp" />
-
-        <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/show_achievements"
-            android:layout_marginBottom="20dp"
-            android:id="@+id/show_achievements_button" />
-
-        <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/show_leaderboards"
-            android:id="@+id/show_leaderboards_button" />
-    </LinearLayout>
-
-    <LinearLayout android:id="@+id/sign_in_bar"
-        android:layout_height="120dp"
+    <LinearLayout
+        android:id="@+id/sign_in_bar"
         android:layout_width="match_parent"
-        android:background="#f0f0f0"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:layout_marginTop="30dp"
-        android:orientation="horizontal"
+        android:background="#f0f0f0"
         android:gravity="center"
-        android:padding="10dp">
+        android:orientation="horizontal"
+        android:padding="10dp" >
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <TextView android:layout_width="0dp"
-            android:layout_weight="1"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/sign_in_why"
             android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="@string/sign_in_why"
             android:textColor="#808080" />
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/sign_out_bar"
-        android:layout_height="120dp"
+    <LinearLayout
+        android:id="@+id/sign_out_bar"
         android:layout_width="match_parent"
-        android:background="#f0f0f0"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:layout_marginTop="30dp"
-        android:orientation="horizontal"
+        android:background="#f0f0f0"
         android:gravity="center|right"
-        android:padding="10dp">
+        android:orientation="horizontal"
+        android:padding="10dp" >
 
-        <TextView android:layout_width="0dp"
-            android:layout_weight="1"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/you_are_signed_in"
             android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="@string/you_are_signed_in"
             android:textColor="#808080" />
 
-         <Button
+        <Button
             android:id="@+id/sign_out_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sign_out"
             android:textSize="12sp" />
     </LinearLayout>
-</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tvGameResult"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:id="@+id/practice_mode_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/layout_bg" >
+
+                <ImageView
+                    android:id="@+id/practice_image"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/fire" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/practice_image"
+                    android:layout_centerHorizontal="true"
+                    android:text="Practice" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/custom_mode_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/layout_bg" >
+
+                <ImageView
+                    android:id="@+id/custom_image"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ice" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/custom_image"
+                    android:layout_centerHorizontal="true"
+                    android:text="Custom" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:id="@+id/show_achievements_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/layout_bg" >
+
+                <ImageView
+                    android:id="@+id/achievements_image"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/heal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/achievements_image"
+                    android:layout_centerHorizontal="true"
+                    android:text="Achievements" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/show_leaderboards_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/layout_bg" >
+
+                <ImageView
+                    android:id="@+id/leaderboard_image"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/lock" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/leaderboard_image"
+                    android:layout_centerHorizontal="true"
+                    android:text="Leaderboard" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

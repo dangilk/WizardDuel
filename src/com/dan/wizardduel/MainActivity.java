@@ -28,6 +28,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.dan.wizardduel.GameCompleteFragment.Listener;
 import com.dan.wizardduel.duelists.PlayerOpponent;
 import com.dan.wizardduel.spells.Spell;
 import com.google.android.gms.games.GamesClient;
@@ -44,15 +45,19 @@ import com.google.example.games.basegameutils.BaseGameActivity;
 
 public class MainActivity extends BaseGameActivity
         implements MainMenuFragment.Listener,
-        GameFragment.Listener, RoomUpdateListener, RealTimeMessageReceivedListener, RoomStatusUpdateListener{
+        GameFragment.Listener, RoomUpdateListener, RealTimeMessageReceivedListener, RoomStatusUpdateListener, GameCompleteFragment.Listener{
 
     
 
     private static final int RC_INVITATION_INBOX = 0;
-
 	private static final int RC_SELECT_PLAYERS = 1;
-
 	private static final int RC_WAITING_ROOM = 2;
+	
+	private static final int GAME_TYPE_PRACTICE = 0;
+	private static final int GAME_TYPE_CUSTOM = 1;
+	private static final int GAME_TYPE_RANKED =2;
+	
+	public int gamePlayingType = GAME_TYPE_PRACTICE;
 
 	public static Random random = new Random();
 
@@ -63,13 +68,15 @@ public class MainActivity extends BaseGameActivity
     final boolean ENABLE_DEBUG = true;
     final String TAG = "TanC";
 
-    // playing on hard mode?
-    boolean mHardMode = false;
+
     
     public MainMenuFragment mMainMenuFragment = null;
     public GameFragment gameFragment;
+    public GameCompleteFragment gameCompleteFragment = null;
     
     public GamesClient gameClient;
+    
+    private boolean replayRequested = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,10 +87,12 @@ public class MainActivity extends BaseGameActivity
         // create fragments
         mMainMenuFragment = new MainMenuFragment();
         gameFragment = new GameFragment();
+        gameCompleteFragment = new GameCompleteFragment();
 
         // listen to fragment events
         mMainMenuFragment.setListener(this);
         gameFragment.setListener(this);
+        gameCompleteFragment.setListener(this);
         //mGameplayFragment.setListener(this);
         //mWinFragment.setListener(this);
 
@@ -118,6 +127,7 @@ public class MainActivity extends BaseGameActivity
     @Override
     public void onStartPracticeGameRequested() {
     	gameFragment.npcGame = true;
+    	gamePlayingType = GAME_TYPE_PRACTICE;
     	switchToFragment(gameFragment);
     }
     
@@ -276,7 +286,8 @@ public class MainActivity extends BaseGameActivity
 	@Override
 	public void onGameComplete(Boolean won) {
 		// TODO Auto-generated method stub
-		switchToFragment(mMainMenuFragment);
+		gameCompleteFragment.setWon(won);
+		switchToFragment(gameCompleteFragment);
 	}
 
 	@Override
@@ -375,6 +386,14 @@ public class MainActivity extends BaseGameActivity
 			((PlayerOpponent)gameFragment.opponent).castSpellCanceled((int)bytes[1]);
 		}else if(bytes[0] == MESSAGE_SPELL_EXECUTED){
 			((PlayerOpponent)gameFragment.opponent).executeSpell(new Spell((int)bytes[2]));
+		}else if(bytes[0] == MESSAGE_REPLAY_REQUESTED){
+			if(replayRequested){
+				//start game again
+				restartCustomGame();
+				startCustomGame(null, null, null);
+			}
+		}else if(bytes[0] == MESSAGE_REPLAY_CUSTOM){
+			startCustomGame(null,null,null);
 		}
 	}
 
@@ -407,22 +426,33 @@ public class MainActivity extends BaseGameActivity
 		for (Participant p : room.getParticipants()) {
 	        String pid = p.getParticipantId();
 	        if (pid != playerId) {
-	            gameFragment.npcGame = false;
-	            gameFragment.playerId = playerId;
-	            gameFragment.opponentId = pid;
-	            gameFragment.roomId = room.getRoomId();
-	            Runnable r = new Runnable() {
-	                @Override
-	                public void run() {
-	                	switchToFragment(gameFragment);
-	                }
-	            };
-	            Handler h = new Handler();
-	            h.post(r);
-	            
+	            startCustomGame(playerId,pid,room.getRoomId());
 	        }
 	    }
 		
+	}
+	
+	public void startCustomGame(String playerId, String opponentId, String roomId){
+		gamePlayingType = GAME_TYPE_CUSTOM;
+		gameFragment.npcGame = false;
+		if(playerId != null){
+			gameFragment.playerId = playerId;
+		}
+		if(opponentId != null){
+			gameFragment.opponentId = opponentId;
+		}
+		if(roomId != null){
+			gameFragment.roomId = roomId;
+		}
+        replayRequested = false;
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+            	switchToFragment(gameFragment);
+            }
+        };
+        Handler h = new Handler();
+        h.post(r);
 	}
 
 	@Override
@@ -506,6 +536,20 @@ public class MainActivity extends BaseGameActivity
 	private static final byte MESSAGE_SPELL_CASTING = 1;
 	private static final byte MESSAGE_SPELL_CAST_CANCELED = 2;
 	private static final byte MESSAGE_SPELL_EXECUTED = 3;
+	private static final byte MESSAGE_REPLAY_REQUESTED = 4;
+	private static final byte MESSAGE_REPLAY_CUSTOM = 5;
+	
+	public void restartCustomGame(){
+		byte[] bytes = new byte[1];
+		bytes[0] = MESSAGE_REPLAY_CUSTOM;
+		gameClient.sendUnreliableRealTimeMessage( bytes, gameFragment.roomId, gameFragment.opponent.playerId);
+	}
+	
+	public void requestReplay() {
+		byte[] bytes = new byte[1];
+		bytes[0] = MESSAGE_REPLAY_REQUESTED;
+		gameClient.sendUnreliableRealTimeMessage( bytes, gameFragment.roomId, gameFragment.opponent.playerId);
+	}
 
 	@Override
 	public void onSpellPrepped(int slot, Spell spell) {
@@ -542,5 +586,23 @@ public class MainActivity extends BaseGameActivity
 		Log.e("tag","spell executed send message"+gameFragment.opponent.playerId);
 		gameClient.sendUnreliableRealTimeMessage( bytes, gameFragment.roomId, gameFragment.opponent.playerId);
 	}
+
+	@Override
+	public void goToMenu() {
+		// TODO Auto-generated method stub
+		switchToFragment(mMainMenuFragment);
+	}
+
+	@Override
+	public void replay() {
+		if(gamePlayingType == GAME_TYPE_PRACTICE){
+			switchToFragment(gameFragment);
+		}else if(gamePlayingType == GAME_TYPE_CUSTOM){
+			replayRequested = true;
+			requestReplay();
+		}
+	}
+
+	
     
 }

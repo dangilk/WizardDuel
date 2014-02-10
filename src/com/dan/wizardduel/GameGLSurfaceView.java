@@ -23,6 +23,7 @@ public class GameGLSurfaceView extends GLSurfaceView {
 	protected void onLayout (boolean changed, int left, int top, int right, int bottom){
 		this.getLocationOnScreen(surfaceOffset);
 		surfaceHeight = bottom - top;
+		Log.e("tag","surface offset y: "+surfaceOffset[1]);
 	}
 	
 	public void clear(){
@@ -36,14 +37,21 @@ public class GameGLSurfaceView extends GLSurfaceView {
 		mRenderer.pointGroup.alphaDecayFactor = 1.0f;
 		
 	}
+	float prevy = 0;
 	
 	public boolean onTouchEvent(final MotionEvent event) {
         queueEvent(new Runnable(){
             public void run() {
             	PointGroup pg = mRenderer.pointGroup;
+            	float x = event.getRawX();
+            	float y = event.getRawY();
             	for(int i=0;i<5;i++){
-            		pg.points.add(new Point(event.getX(),surfaceHeight-event.getY()+surfaceOffset[1],true));
+            		/*if(y - prevy > 30){
+            			Log.e("tag","weird offset: "+prevy+" , "+y);
+            		}*/;
+            		pg.points.add(new Point(x,surfaceHeight-y+surfaceOffset[1],true));
             	}
+            	//prevy = y;
             	
             }});
             return true;
