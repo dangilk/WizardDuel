@@ -28,9 +28,9 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.dan.wizardduel.GameCompleteFragment.Listener;
 import com.dan.wizardduel.duelists.PlayerOpponent;
 import com.dan.wizardduel.spells.Spell;
+import com.google.android.gms.games.Game;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.Player;
 import com.google.android.gms.games.multiplayer.Invitation;
@@ -52,10 +52,13 @@ public class MainActivity extends BaseGameActivity
     private static final int RC_INVITATION_INBOX = 0;
 	private static final int RC_SELECT_PLAYERS = 1;
 	private static final int RC_WAITING_ROOM = 2;
+	private static final int RC_LEADERBOARD = 3;
 	
 	private static final int GAME_TYPE_PRACTICE = 0;
 	private static final int GAME_TYPE_CUSTOM = 1;
 	private static final int GAME_TYPE_RANKED =2;
+	
+	private int consecutiveWins = 0;
 	
 	public int gamePlayingType = GAME_TYPE_PRACTICE;
 
@@ -133,6 +136,7 @@ public class MainActivity extends BaseGameActivity
     
     @Override
     public void onStartCustomGameRequested() {
+    	gamePlayingType = GAME_TYPE_CUSTOM;
         openInvitePlayers();
     }
 
@@ -148,7 +152,8 @@ public class MainActivity extends BaseGameActivity
     @Override
     public void onShowLeaderboardsRequested() {
         if (isSignedIn()) {
-            startActivityForResult(getGamesClient().getAllLeaderboardsIntent(), RC_UNUSED);
+        	mMainMenuFragment.startLoading();
+            startActivityForResult(getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
         } else {
             showAlert(getString(R.string.leaderboards_not_available));
         }
@@ -156,12 +161,14 @@ public class MainActivity extends BaseGameActivity
 
     
     void openInvitationInbox(){
+    	mMainMenuFragment.startLoading();
     	// launch the intent to show the invitation inbox screen
     	Intent intent = getGamesClient().getInvitationInboxIntent();
     	this.startActivityForResult(intent, RC_INVITATION_INBOX);
     }
     
     void openInvitePlayers(){
+    	mMainMenuFragment.startLoading();
     	// launch the player selection screen
     	// minimum: 1 other player; maximum: 3 other players
     	Intent intent = getGamesClient().getSelectPlayersIntent(1, 1);
@@ -169,6 +176,7 @@ public class MainActivity extends BaseGameActivity
     }
     
     void startQuickGame(){
+    	mMainMenuFragment.startLoading();
     	// automatch criteria to invite 1 random automatch opponent.  
         // You can also specify more opponents (up to 3). 
         Bundle am = RoomConfig.createAutoMatchCriteria(1, 1, 0);
@@ -285,7 +293,9 @@ public class MainActivity extends BaseGameActivity
 
 	@Override
 	public void onGameComplete(Boolean won) {
-		// TODO Auto-generated method stub
+		if(won && gamePlayingType == GAME_TYPE_RANKED){
+			gameClient.submitScore(getResources().getString(R.string.leaderboard_points), consecutiveWins + 1);
+		}
 		gameCompleteFragment.setWon(won);
 		switchToFragment(gameCompleteFragment);
 	}
@@ -433,7 +443,8 @@ public class MainActivity extends BaseGameActivity
 	}
 	
 	public void startCustomGame(String playerId, String opponentId, String roomId){
-		gamePlayingType = GAME_TYPE_CUSTOM;
+		mMainMenuFragment.stopLoading();
+		
 		gameFragment.npcGame = false;
 		if(playerId != null){
 			gameFragment.playerId = playerId;
@@ -471,9 +482,10 @@ public class MainActivity extends BaseGameActivity
 	@Override
 	public void onActivityResult(int request, int response, Intent data) {
 		super.onActivityResult(request, response, data);
+		Log.e("tag","activity result: "+request+ " , "+response);
 	    if (request == RC_INVITATION_INBOX) {
 	        if (response != Activity.RESULT_OK) {
-	            // canceled
+	        	mMainMenuFragment.stopLoading();
 	            return;
 	        }
 
@@ -494,7 +506,7 @@ public class MainActivity extends BaseGameActivity
 	        // go to game screen
 	    }else if (request == RC_SELECT_PLAYERS) {
 	        if (response != Activity.RESULT_OK) {
-	            // user canceled
+	        	mMainMenuFragment.stopLoading();
 	            return;
 	        }
 
@@ -529,6 +541,13 @@ public class MainActivity extends BaseGameActivity
 
 	        // prevent screen from sleeping during handshake
 	        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	    }else if(request == RC_WAITING_ROOM){
+	    	if (response != Activity.RESULT_OK) {
+	    		mMainMenuFragment.stopLoading();
+	            return;
+	        }
+	    }else if(request == RC_LEADERBOARD){
+	    	mMainMenuFragment.stopLoading();
 	    }
 	}
 	
@@ -600,7 +619,29 @@ public class MainActivity extends BaseGameActivity
 		}else if(gamePlayingType == GAME_TYPE_CUSTOM){
 			replayRequested = true;
 			requestReplay();
+		}else if(gamePlayingType == GAME_TYPE_RANKED){
+			onStartRankedGameRequested();
 		}
+	}
+
+	@Override
+	public void onStartRankedGameRequested() {
+		gamePlayingType = GAME_TYPE_RANKED;
+		mMainMenuFragment.startLoading();
+		// auto-match criteria to invite one random automatch opponent.  
+	    // You can also specify more opponents (up to 3). 
+	    Bundle am = RoomConfig.createAutoMatchCriteria(1, 1, 0);
+
+	    // build the room config:
+	    RoomConfig.Builder roomConfigBuilder = makeBasicRoomConfigBuilder();
+	    roomConfigBuilder.setAutoMatchCriteria(am);
+	    RoomConfig roomConfig = roomConfigBuilder.build();
+
+	    // create room:
+        getGamesClient().createRoom(roomConfig);
+
+        // prevent screen from sleeping during handshake
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 	

@@ -21,8 +21,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import com.dan.wizardduel.R;
+import android.widget.RelativeLayout;
+
+import com.todddavies.components.progressbar.ProgressWheel;
 
 /**
  * Fragment with the main menu for the game. The main menu allows the player
@@ -38,6 +39,7 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
     public interface Listener {
         public void onStartPracticeGameRequested();
         public void onStartCustomGameRequested();
+        public void onStartRankedGameRequested();
         public void onShowAchievementsRequested();
         public void onShowLeaderboardsRequested();
         public void onSignInButtonClicked();
@@ -46,6 +48,9 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 
     Listener mListener = null;
     boolean mShowSignIn = true;
+    RelativeLayout rlLoading;
+    ProgressWheel pwLoading;
+    boolean isLoading = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,14 +58,27 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
         View v = inflater.inflate(R.layout.fragment_mainmenu, container, false);
         final int[] CLICKABLES = new int[] {
                 R.id.practice_mode_button, R.id.custom_mode_button,
-                R.id.show_achievements_button, R.id.show_leaderboards_button,
+                R.id.ranked_mode_button, R.id.show_leaderboards_button,
                 R.id.sign_in_button, R.id.sign_out_button
         };
         
         for (int i : CLICKABLES) {
             v.findViewById(i).setOnClickListener(this);
         }
+        rlLoading = (RelativeLayout)v.findViewById(R.id.rlMenuLoading);
+        pwLoading = (ProgressWheel)v.findViewById(R.id.pwMenuloading);
+        pwLoading.spin();
         return v;
+    }
+    
+    public void startLoading(){
+    	rlLoading.setVisibility(View.VISIBLE);
+    	isLoading = true;
+    }
+    
+    public void stopLoading(){
+    	rlLoading.setVisibility(View.GONE);
+    	isLoading = false;
     }
 
     public void setListener(Listener l) {
@@ -91,13 +109,16 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onClick(View view) {
+    	if(isLoading){
+    		return;
+    	}
         int id = view.getId();
 		if (id == R.id.practice_mode_button) {
 			mListener.onStartPracticeGameRequested();
 		} else if (id == R.id.custom_mode_button) {
 			mListener.onStartCustomGameRequested();
-		} else if (id == R.id.show_achievements_button) {
-			mListener.onShowAchievementsRequested();
+		} else if (id == R.id.ranked_mode_button) {
+			mListener.onStartRankedGameRequested();
 		} else if (id == R.id.show_leaderboards_button) {
 			mListener.onShowLeaderboardsRequested();
 		} else if (id == R.id.sign_in_button) {

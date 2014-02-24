@@ -19,6 +19,7 @@
 <!-- MAIN MENU -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/screen_menu"
+    xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center" >
@@ -165,7 +166,7 @@
             android:orientation="horizontal" >
 
             <RelativeLayout
-                android:id="@+id/show_achievements_button"
+                android:id="@+id/ranked_mode_button"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="30dp"
@@ -187,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/achievements_image"
                     android:layout_centerHorizontal="true"
-                    android:text="Achievements" />
+                    android:text="Ranked" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -216,5 +217,34 @@
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlMenuLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#BB444444"
+        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+        
+        <com.todddavies.components.progressbar.ProgressWheel
+            android:id="@+id/pwMenuloading"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:visibility= "visible"
+            ProgressWheel:barColor="#AA66CC"
+            ProgressWheel:barLength="40dp"
+            ProgressWheel:barWidth="40dp"
+            ProgressWheel:rimColor="#9933CC"
+            ProgressWheel:rimWidth="30dp"
+            ProgressWheel:text="Loading..."
+            ProgressWheel:textColor="#FFF"
+            ProgressWheel:textSize="20sp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
