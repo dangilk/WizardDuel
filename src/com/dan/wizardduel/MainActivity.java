@@ -27,6 +27,8 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.WindowManager;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
 
 import com.dan.wizardduel.duelists.PlayerOpponent;
 import com.dan.wizardduel.spells.Spell;
@@ -86,6 +88,7 @@ public class MainActivity extends BaseGameActivity
         enableDebugLog(ENABLE_DEBUG, TAG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Parse.initialize(this, "mSv8KhFrJ5IfLMBu2aVroa0gqDgAQEvN8pWW4Vki", "E5f15j0XCXLZmMjYKlkUxWd8EIDoyB8nptf21G46");
 
         // create fragments
         mMainMenuFragment = new MainMenuFragment();
