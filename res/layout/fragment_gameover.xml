@@ -3,32 +3,66 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <Button
-        android:id="@+id/btMenu"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btRematch"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/btRematch"
-        android:layout_marginBottom="50dp"
-        android:text="menu" />
+        android:background="@color/AppGrey" >
+
+        <Button
+            android:id="@+id/btMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/btRematch"
+            android:layout_alignRight="@+id/btRematch"
+            android:layout_below="@+id/btRematch"
+            android:layout_marginBottom="50dp"
+            android:text="menu" />
+
+        <Button
+            android:id="@+id/btRematch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="rematch" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tvGameResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btRematch"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="96dp"
+        android:layout_centerVertical="true"
+        android:textSize="42sp"
         android:text="game result" />
 
-    <Button
-        android:id="@+id/btRematch"
+    <LinearLayout
+        android:id="@+id/llCompleteWins"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btMenu"
+        android:visibility="invisible"
+        android:layout_above="@+id/tvGameResult"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:text="rematch" />
+        android:layout_marginBottom="55dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tvCompleteWins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Win Streak" />
+
+        <TextView
+            android:id="@+id/tvCompleteWinCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15"
+            android:textSize="52sp" />
+    </LinearLayout>
 
 </RelativeLayout>

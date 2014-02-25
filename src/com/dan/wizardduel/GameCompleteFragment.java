@@ -6,16 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class GameCompleteFragment extends Fragment implements OnClickListener{
 	
 	private TextView tvResult;
 	private boolean won = false;
+	private TextView tvWins;
+	private LinearLayout llWins;
+	private int wins;
 	
 	public interface Listener{
 		public void goToMenu();
 		public void replay();
+		public int getScore();
 	}
 	
 	private Listener listener = null;
@@ -33,9 +38,20 @@ public class GameCompleteFragment extends Fragment implements OnClickListener{
         }
         
         tvResult = (TextView)v.findViewById(R.id.tvGameResult);
+        tvWins = (TextView)v.findViewById(R.id.tvCompleteWinCount);
+        llWins = (LinearLayout)v.findViewById(R.id.llCompleteWins);
+        setWins(wins);
         setResult();
         return v;
     }
+	
+	public void setWins(int score){
+		if(llWins != null){
+			llWins.setVisibility(View.VISIBLE);
+			tvWins.setText(Integer.toString(score));
+		}
+		wins = score;
+	}
 	
 	public void setResult(){
 		if(won){

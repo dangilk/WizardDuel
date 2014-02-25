@@ -14,6 +14,14 @@ public class Score {
 	private int consecutiveWins = 0;
 	private String uid;
 	ParseObject self;
+	private Listener listener;
+	public interface Listener{
+		void scoreUpdated(int score);
+	}
+	
+	public Score(Listener l){
+		listener = l;
+	}
 	
 	public void init(final String uid){
 		this.uid = uid;
@@ -34,6 +42,8 @@ public class Score {
 		        		score.saveInBackground();
 		        		self = score;
 		        	}
+		        	Log.e("tag","got score: "+consecutiveWins);
+		        	listener.scoreUpdated(consecutiveWins);
 		        } else {
 		            Log.d("score", "Error: " + e.getMessage());
 		        }
@@ -48,6 +58,7 @@ public class Score {
 			self.increment("consecutiveWins");
 			self.saveInBackground();
 		}
+		listener.scoreUpdated(consecutiveWins);
 	}
 	public void clear(){
 		consecutiveWins = 0;
@@ -55,6 +66,7 @@ public class Score {
 			self.put("consecutiveWins", 0);
 			self.saveInBackground();
 		}
+		listener.scoreUpdated(consecutiveWins);
 	}
 
 	public int getConsecutiveWins() {

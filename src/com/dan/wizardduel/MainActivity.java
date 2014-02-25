@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Random;
 
 import utils.Score;
+import utils.Score.Listener;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,7 +47,7 @@ import com.parse.Parse;
 
 public class MainActivity extends BaseGameActivity
         implements MainMenuFragment.Listener,
-        GameFragment.Listener, RoomUpdateListener, RealTimeMessageReceivedListener, RoomStatusUpdateListener, GameCompleteFragment.Listener{
+        GameFragment.Listener, RoomUpdateListener, RealTimeMessageReceivedListener, RoomStatusUpdateListener, GameCompleteFragment.Listener, Score.Listener{
 
     
 
@@ -109,7 +110,7 @@ public class MainActivity extends BaseGameActivity
         
         gameClient = this.mHelper.getGamesClient();
 
-        score = new Score();
+        score = new Score(this);
 
 
     }
@@ -241,6 +242,8 @@ public class MainActivity extends BaseGameActivity
     	
     	
     	if (getInvitationId() != null) {
+    		gamePlayingType = GAME_TYPE_CUSTOM;
+    		mMainMenuFragment.startLoading();
             RoomConfig.Builder roomConfigBuilder =
                 makeBasicRoomConfigBuilder();
             roomConfigBuilder.setInvitationIdToAccept(getInvitationId());
@@ -562,12 +565,14 @@ public class MainActivity extends BaseGameActivity
 	private static final byte MESSAGE_REPLAY_CUSTOM = 5;
 	
 	public void restartCustomGame(){
+		Log.e("tag", "send restart request");
 		byte[] bytes = new byte[1];
 		bytes[0] = MESSAGE_REPLAY_CUSTOM;
 		gameClient.sendUnreliableRealTimeMessage( bytes, gameFragment.roomId, gameFragment.opponent.playerId);
 	}
 	
 	public void requestReplay() {
+		Log.e("tag", "send rematch request");
 		byte[] bytes = new byte[1];
 		bytes[0] = MESSAGE_REPLAY_REQUESTED;
 		gameClient.sendUnreliableRealTimeMessage( bytes, gameFragment.roomId, gameFragment.opponent.playerId);
@@ -645,6 +650,17 @@ public class MainActivity extends BaseGameActivity
 
         // prevent screen from sleeping during handshake
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	}
+
+	@Override
+	public void scoreUpdated(int score) {
+		mMainMenuFragment.setWins(score);
+		gameCompleteFragment.setWins(score);
+	}
+
+	@Override
+	public int getScore() {
+		return score.getConsecutiveWins();
 	}
 
 	

@@ -21,7 +21,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.todddavies.components.progressbar.ProgressWheel;
 
@@ -44,6 +46,7 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
         public void onShowLeaderboardsRequested();
         public void onSignInButtonClicked();
         public void onSignOutButtonClicked();
+        public int getScore();
     }
 
     Listener mListener = null;
@@ -51,6 +54,9 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
     RelativeLayout rlLoading;
     ProgressWheel pwLoading;
     boolean isLoading = false;
+    TextView tvWins;
+    private int wins;
+    LinearLayout llWins;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,8 +73,19 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
         }
         rlLoading = (RelativeLayout)v.findViewById(R.id.rlMenuLoading);
         pwLoading = (ProgressWheel)v.findViewById(R.id.pwMenuloading);
+        tvWins = (TextView)v.findViewById(R.id.tvWinCount);
+        llWins = (LinearLayout)v.findViewById(R.id.llMenuWins);
+        setWins(wins);
         pwLoading.spin();
         return v;
+    }
+    
+    public void setWins(int wins){
+    	if(llWins != null && wins > 0){
+    		llWins.setVisibility(View.VISIBLE);
+    		tvWins.setText(Integer.toString(wins));
+    	}
+    	this.wins = wins;
     }
     
     public void startLoading(){
