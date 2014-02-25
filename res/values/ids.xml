@@ -30,4 +30,7 @@
     <string name="leaderboard_points">CgkI8_aQ560PEAIQAg</string>
     <string name="leaderboard_easy">CgkI9-aElbwREAIQCQ</string>
     <string name="leaderboard_hard">CgkI9-aElbwREAIQCg</string>
+    
+    <string name="parseId">mSv8KhFrJ5IfLMBu2aVroa0gqDgAQEvN8pWW4Vki</string>
+    <string name="parseKey">E5f15j0XCXLZmMjYKlkUxWd8EIDoyB8nptf21G46</string>
 </resources>

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import utils.Score;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,12 +28,9 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.WindowManager;
-import com.parse.Parse;
-import com.parse.ParseAnalytics;
 
 import com.dan.wizardduel.duelists.PlayerOpponent;
 import com.dan.wizardduel.spells.Spell;
-import com.google.android.gms.games.Game;
 import com.google.android.gms.games.GamesClient;
 import com.google.android.gms.games.Player;
 import com.google.android.gms.games.multiplayer.Invitation;
@@ -44,6 +42,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListener;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.example.games.basegameutils.BaseGameActivity;
+import com.parse.Parse;
 
 public class MainActivity extends BaseGameActivity
         implements MainMenuFragment.Listener,
@@ -81,6 +80,8 @@ public class MainActivity extends BaseGameActivity
     
     public GamesClient gameClient;
     
+    private Score score;
+    
     private boolean replayRequested = false;
 
     @Override
@@ -88,7 +89,7 @@ public class MainActivity extends BaseGameActivity
         enableDebugLog(ENABLE_DEBUG, TAG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Parse.initialize(this, "mSv8KhFrJ5IfLMBu2aVroa0gqDgAQEvN8pWW4Vki", "E5f15j0XCXLZmMjYKlkUxWd8EIDoyB8nptf21G46");
+        Parse.initialize(this, getString(R.string.parseId), getString(R.string.parseKey));
 
         // create fragments
         mMainMenuFragment = new MainMenuFragment();
@@ -108,11 +109,7 @@ public class MainActivity extends BaseGameActivity
         
         gameClient = this.mHelper.getGamesClient();
 
-        // IMPORTANT: if this Activity supported rotation, we'd have to be
-        // more careful about adding the fragment, since the fragment would
-        // already be there after rotation and trying to add it again would
-        // result in overlapping fragments. But since we don't support rotation,
-        // we don't deal with that for code simplicity.
+        score = new Score();
 
 
     }
@@ -271,7 +268,7 @@ public class MainActivity extends BaseGameActivity
             displayName = p.getDisplayName();
         }
         mMainMenuFragment.setGreeting("Hello, " + displayName);
-
+        score.init(p.getPlayerId());
     }
     
     /*
@@ -297,7 +294,10 @@ public class MainActivity extends BaseGameActivity
 	@Override
 	public void onGameComplete(Boolean won) {
 		if(won && gamePlayingType == GAME_TYPE_RANKED){
-			gameClient.submitScore(getResources().getString(R.string.leaderboard_points), consecutiveWins + 1);
+			score.increment();
+			gameClient.submitScore(getResources().getString(R.string.leaderboard_points), score.getConsecutiveWins());
+		}else if(gamePlayingType == GAME_TYPE_RANKED){
+			score.clear();
 		}
 		gameCompleteFragment.setWon(won);
 		switchToFragment(gameCompleteFragment);

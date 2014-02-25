@@ -475,22 +475,22 @@ containing a value of this type.
         public static final int gestures=0x7f040000;
     }
     public static final class string {
-        public static final int achievement=0x7f050039;
+        public static final int achievement=0x7f05003b;
         public static final int achievement_arrogant=0x7f050026;
-        public static final int achievement_arrogant_toast_text=0x7f050036;
+        public static final int achievement_arrogant_toast_text=0x7f050038;
         public static final int achievement_bored=0x7f050024;
         public static final int achievement_humble=0x7f050025;
-        public static final int achievement_humble_toast_text=0x7f050037;
+        public static final int achievement_humble_toast_text=0x7f050039;
         public static final int achievement_leet=0x7f050027;
-        public static final int achievement_leet_toast_text=0x7f050038;
+        public static final int achievement_leet_toast_text=0x7f05003a;
         /**  TODO: Replace these by your achievement/leaderboard IDs! 
          */
         public static final int achievement_play=0x7f050021;
         public static final int achievement_prime=0x7f050022;
-        public static final int achievement_prime_toast_text=0x7f050035;
+        public static final int achievement_prime_toast_text=0x7f050037;
         public static final int achievement_really_bored=0x7f050023;
-        public static final int achievements_not_available=0x7f050031;
-        public static final int action_settings=0x7f05002b;
+        public static final int achievements_not_available=0x7f050033;
+        public static final int action_settings=0x7f05002d;
         /**  TODO: Replace this by your app's app ID! 
          */
         public static final int app_id=0x7f050020;
@@ -518,8 +518,8 @@ containing a value of this type.
         [CHAR LIMIT=70] 
          */
         public static final int auth_client_using_bad_version_title=0x7f050016;
-        public static final int choose_difficulty=0x7f050049;
-        public static final int clear=0x7f050047;
+        public static final int choose_difficulty=0x7f05004b;
+        public static final int clear=0x7f050049;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -591,46 +591,48 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f050015;
-        public static final int digit0=0x7f05003d;
-        public static final int digit1=0x7f05003e;
-        public static final int digit2=0x7f05003f;
-        public static final int digit3=0x7f050040;
-        public static final int digit4=0x7f050041;
-        public static final int digit5=0x7f050042;
-        public static final int digit6=0x7f050043;
-        public static final int digit7=0x7f050044;
-        public static final int digit8=0x7f050045;
-        public static final int digit9=0x7f050046;
-        public static final int easy=0x7f05004a;
-        public static final int easy_mode_explanation=0x7f050033;
+        public static final int digit0=0x7f05003f;
+        public static final int digit1=0x7f050040;
+        public static final int digit2=0x7f050041;
+        public static final int digit3=0x7f050042;
+        public static final int digit4=0x7f050043;
+        public static final int digit5=0x7f050044;
+        public static final int digit6=0x7f050045;
+        public static final int digit7=0x7f050046;
+        public static final int digit8=0x7f050047;
+        public static final int digit9=0x7f050048;
+        public static final int easy=0x7f05004c;
+        public static final int easy_mode_explanation=0x7f050035;
         public static final int gamehelper_app_misconfigured=0x7f05001d;
         public static final int gamehelper_license_failed=0x7f05001e;
         public static final int gamehelper_sign_in_failed=0x7f05001c;
         public static final int gamehelper_unknown_error=0x7f05001f;
-        public static final int hard=0x7f05004b;
-        public static final int hard_mode_explanation=0x7f050034;
+        public static final int hard=0x7f05004d;
+        public static final int hard_mode_explanation=0x7f050036;
         public static final int hello=0x7f050000;
-        public static final int hello_world=0x7f05002c;
-        public static final int initial_input=0x7f05003c;
+        public static final int hello_world=0x7f05002e;
+        public static final int initial_input=0x7f05003e;
         public static final int leaderboard_easy=0x7f050029;
         public static final int leaderboard_hard=0x7f05002a;
         public static final int leaderboard_points=0x7f050028;
-        public static final int leaderboards_not_available=0x7f050032;
-        public static final int ok=0x7f050048;
-        public static final int see_your_progress=0x7f05004c;
-        public static final int show_achievements=0x7f05004d;
-        public static final int show_leaderboards=0x7f05004e;
-        public static final int sign_in_to_upload_this_score=0x7f050053;
-        public static final int sign_in_why=0x7f05004f;
-        public static final int sign_out=0x7f050051;
-        public static final int signed_out_greeting=0x7f050030;
-        public static final int signing_in=0x7f05002d;
-        public static final int signing_out=0x7f05002e;
-        public static final int title_activity_main=0x7f05002f;
-        public static final int what_score_do_you_deserve=0x7f05003b;
-        public static final int you_are_signed_in=0x7f050050;
-        public static final int you_win=0x7f050052;
-        public static final int your_progress_will_be_uploaded=0x7f05003a;
+        public static final int leaderboards_not_available=0x7f050034;
+        public static final int ok=0x7f05004a;
+        public static final int parseId=0x7f05002b;
+        public static final int parseKey=0x7f05002c;
+        public static final int see_your_progress=0x7f05004e;
+        public static final int show_achievements=0x7f05004f;
+        public static final int show_leaderboards=0x7f050050;
+        public static final int sign_in_to_upload_this_score=0x7f050055;
+        public static final int sign_in_why=0x7f050051;
+        public static final int sign_out=0x7f050053;
+        public static final int signed_out_greeting=0x7f050032;
+        public static final int signing_in=0x7f05002f;
+        public static final int signing_out=0x7f050030;
+        public static final int title_activity_main=0x7f050031;
+        public static final int what_score_do_you_deserve=0x7f05003d;
+        public static final int you_are_signed_in=0x7f050052;
+        public static final int you_win=0x7f050054;
+        public static final int your_progress_will_be_uploaded=0x7f05003c;
     }
     public static final class style {
         /** 
