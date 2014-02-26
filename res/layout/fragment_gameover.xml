@@ -45,9 +45,10 @@
         android:id="@+id/llCompleteWins"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:layout_above="@+id/tvGameResult"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:layout_marginBottom="55dp"
         android:orientation="vertical" >
 
@@ -61,7 +62,7 @@
             android:id="@+id/tvCompleteWinCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="15"
+            android:text="1"
             android:textSize="52sp" />
     </LinearLayout>
 

@@ -16,6 +16,7 @@ public class GameCompleteFragment extends Fragment implements OnClickListener{
 	private TextView tvWins;
 	private LinearLayout llWins;
 	private int wins;
+	boolean showWins = false;
 	
 	public interface Listener{
 		public void goToMenu();
@@ -45,10 +46,18 @@ public class GameCompleteFragment extends Fragment implements OnClickListener{
         return v;
     }
 	
+	public void setShowWins(boolean wins){
+		showWins = wins;
+	}
+	
 	public void setWins(int score){
 		if(llWins != null){
-			llWins.setVisibility(View.VISIBLE);
-			tvWins.setText(Integer.toString(score));
+			if(showWins){
+				llWins.setVisibility(View.VISIBLE);
+				tvWins.setText(Integer.toString(score));
+			}else{
+				llWins.setVisibility(View.INVISIBLE);
+			}
 		}
 		wins = score;
 	}

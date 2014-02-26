@@ -131,13 +131,13 @@ public class MainActivity extends BaseGameActivity
     @Override
     public void onStartPracticeGameRequested() {
     	gameFragment.npcGame = true;
-    	gamePlayingType = GAME_TYPE_PRACTICE;
+    	setGamePlayingType(GAME_TYPE_PRACTICE);
     	switchToFragment(gameFragment);
     }
     
     @Override
     public void onStartCustomGameRequested() {
-    	gamePlayingType = GAME_TYPE_CUSTOM;
+    	setGamePlayingType(GAME_TYPE_CUSTOM);
         openInvitePlayers();
     }
 
@@ -154,7 +154,7 @@ public class MainActivity extends BaseGameActivity
     public void onShowLeaderboardsRequested() {
         if (isSignedIn()) {
         	mMainMenuFragment.startLoading();
-            startActivityForResult(getGamesClient().getAllLeaderboardsIntent(), RC_LEADERBOARD);
+            startActivityForResult(getGamesClient().getLeaderboardIntent(getString(R.string.leaderboard_points)), RC_LEADERBOARD);
         } else {
             showAlert(getString(R.string.leaderboards_not_available));
         }
@@ -242,7 +242,7 @@ public class MainActivity extends BaseGameActivity
     	
     	
     	if (getInvitationId() != null) {
-    		gamePlayingType = GAME_TYPE_CUSTOM;
+    		setGamePlayingType(GAME_TYPE_CUSTOM);
     		mMainMenuFragment.startLoading();
             RoomConfig.Builder roomConfigBuilder =
                 makeBasicRoomConfigBuilder();
@@ -631,10 +631,19 @@ public class MainActivity extends BaseGameActivity
 			onStartRankedGameRequested();
 		}
 	}
+	
+	private void setGamePlayingType(int type){
+		gamePlayingType = type;
+		if(type == GAME_TYPE_RANKED){
+			gameCompleteFragment.setShowWins(true);
+		}else{
+			gameCompleteFragment.setShowWins(false);
+		}
+	}
 
 	@Override
 	public void onStartRankedGameRequested() {
-		gamePlayingType = GAME_TYPE_RANKED;
+		setGamePlayingType(GAME_TYPE_RANKED);
 		mMainMenuFragment.startLoading();
 		// auto-match criteria to invite one random automatch opponent.  
 	    // You can also specify more opponents (up to 3). 
