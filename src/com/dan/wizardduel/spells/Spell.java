@@ -7,21 +7,28 @@ import android.util.Log;
 
 import com.dan.wizardduel.MainActivity;
 import com.dan.wizardduel.R;
-import com.dan.wizardduel.combat.Effect;
+import com.dan.wizardduel.effects.Effect;
 
-public class Spell {
+public abstract class Spell {
 
 	public static final int TARGET_SELF = 0;
 	public static final int TARGET_OPPONENT= 1;
 	public int castTime = 5;
-	public String id;
-	public int effect = 0;
+	//public int effect = 0;
 	public int effectTarget = TARGET_SELF;
 	public int damage;
 	public int target = TARGET_OPPONENT;
 	public int manaCost = 20;
-	public int icon = R.drawable.fire;
-	public int intId = 0;
+	public final int icon;
+	public final int intId;
+	public final String id;
+	public Effect effect = null;
+	
+	public Spell(int icon, int intId, String id){
+		this.icon = icon;
+		this.intId = intId;
+		this.id = id;
+	}
 
 	public static final BiMap<String,Integer> spells;
 	static{
@@ -36,50 +43,29 @@ public class Spell {
 		spells.put("shield",8);
 	}
 	
-	private void initSpell(String id){
-		if(id.equalsIgnoreCase("fire")){
-			this.damage = 50;
-			this.manaCost = 50;
-			this.icon = R.drawable.fire;
-		}else if(id.equalsIgnoreCase("heal")){
-			this.damage = -20;
-			this.target = TARGET_SELF;
-			this.manaCost = 20;
-			this.icon = R.drawable.heal;
-		}else if(id.equalsIgnoreCase("ice")){
-			this.damage = 20;
-			this.manaCost=30;
-			this.effect = Effect.SLOW;
-			this.effectTarget = TARGET_OPPONENT;
-			this.icon = R.drawable.ice;
-		}else if(id.equalsIgnoreCase("haste")){
-			this.damage = 0;
-			this.manaCost=20;
-			this.effect = Effect.HASTE;
-			this.target = TARGET_SELF;
-			this.icon = R.drawable.haste;
-		}else if(id.equalsIgnoreCase("poison")){
-			this.damage = 10;
-			this.manaCost=30;
-			this.effect = Effect.POISON;
-			this.effectTarget = TARGET_OPPONENT;
-			this.icon = R.drawable.poison;
-		}else if(id.equalsIgnoreCase("counter")){
-			this.damage = 0;
-			this.manaCost = 20;
-			this.icon = R.drawable.counter;
-		}else if(id.equalsIgnoreCase("lock")){
-			this.damage = 10;
-			this.manaCost = 20;
-			this.effect = Effect.LOCK;
-			this.effectTarget = TARGET_OPPONENT;
-			this.icon = R.drawable.lock;
-		}else if(id.equalsIgnoreCase("shield")){
-			this.damage = 0;
-			this.manaCost = 10;
-			this.effect = Effect.SHIELD;
-			this.icon = R.drawable.shield;
+	public static Spell buildSpell(int id){
+		switch(id){
+		case 1:
+			return new Heal();
+		case 2:
+			return new Fire();
+		case 3:
+			return new Ice();
+		case 4:
+			return new Haste();
+		case 5:
+			return new Poison();
+		case 6:
+			return new Counter();
+		case 7:
+			return new Lock();
+		default:
+			return new Shield();
 		}
+	}
+	
+	public static Spell buildSpell(String id){
+		return buildSpell(spells.get(id));
 	}
 	
 	public static String randomSpell(){
@@ -94,20 +80,4 @@ public class Spell {
 		}
 		return null;
 	}
-	
-	public Spell(int intId){
-		Log.e("tag","init spell: "+intId);
-		this.intId = intId;
-		this.id = spells.getKey(intId);
-		initSpell(id);
-	}
-
-	
-	public Spell(String id){
-		this.id = id;
-		this.intId = spells.get(id);
-		initSpell(id);
-	}
-	
-	
 }

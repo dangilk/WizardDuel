@@ -148,7 +148,6 @@ public class CombatController implements OnGesturePerformedListener, OnGesturing
 
 	@Override
 	public void onGesturingEnded(GestureOverlayView overlay) {
-		// TODO Auto-generated method stub
 		mGLView.forceFade();
 	}
 
@@ -158,8 +157,6 @@ public class CombatController implements OnGesturePerformedListener, OnGesturing
 		// TODO Auto-generated method stub
 		ArrayList<Prediction> prediction = gestureLibrary
 				.recognize(gesture);
-		Set<String> gests = gestureLibrary.getGestureEntries();
-
 		if (prediction.size() > 0) {
 			Toast toast = Toast.makeText(context, prediction.get(0).name,
 					Toast.LENGTH_SHORT);

@@ -401,7 +401,7 @@ public class MainActivity extends BaseGameActivity
 		}else if(bytes[0] == MESSAGE_SPELL_CAST_CANCELED){
 			((PlayerOpponent)gameFragment.opponent).castSpellCanceled((int)bytes[1]);
 		}else if(bytes[0] == MESSAGE_SPELL_EXECUTED){
-			((PlayerOpponent)gameFragment.opponent).executeSpell(new Spell((int)bytes[2]));
+			((PlayerOpponent)gameFragment.opponent).executeSpell(Spell.buildSpell((int)bytes[2]));
 		}else if(bytes[0] == MESSAGE_REPLAY_REQUESTED){
 			if(replayRequested){
 				//start game again

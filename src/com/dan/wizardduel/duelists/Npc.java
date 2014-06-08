@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import com.dan.wizardduel.GameFragment;
 import com.dan.wizardduel.MainActivity;
 import com.dan.wizardduel.R;
-import com.dan.wizardduel.combat.Effect;
+import com.dan.wizardduel.effects.Effect;
 import com.dan.wizardduel.spells.Spell;
 import com.todddavies.components.progressbar.ProgressWheel;
 

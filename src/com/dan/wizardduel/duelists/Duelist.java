@@ -15,8 +15,8 @@ import android.widget.LinearLayout;
 import com.dan.wizardduel.GameFragment;
 import com.dan.wizardduel.MainActivity;
 import com.dan.wizardduel.R;
-import com.dan.wizardduel.combat.Effect;
 import com.dan.wizardduel.combat.HpListener;
+import com.dan.wizardduel.effects.Effect;
 import com.dan.wizardduel.spells.Spell;
 import com.todddavies.components.progressbar.ProgressWheel;
 
@@ -89,7 +89,7 @@ public class Duelist {
 			this.decHp(spell.damage);
 		}
 		
-		if(spell.effect > 0){
+		if(spell.effect != null){
 			if(spell.effectTarget == Spell.TARGET_OPPONENT){
 				opponent.addEffect(spell.effect);
 			}else if(spell.effectTarget == Spell.TARGET_SELF){
@@ -196,7 +196,7 @@ public class Duelist {
 		
 		int slot = nextOpenSlot();
 		if(slot >= 0){
-			Spell spell = new Spell(id);
+			Spell spell = Spell.buildSpell(id);
 			spells.set(slot, spell);
 			spellIVs.get(slot).setImageResource(spell.icon);
 			Log.e("tag","add spell");
@@ -208,7 +208,7 @@ public class Duelist {
 	}
 	
 	public void addSpellAt(int slot, int id){
-		Spell spell = new Spell(id);
+		Spell spell = Spell.buildSpell(id);
 		spells.set(slot,spell);
 		spellIVs.get(slot).setImageResource(spell.icon);
 		if(duelistListener != null){
@@ -256,15 +256,15 @@ public class Duelist {
 		return 0;
 	}
 	
-	public void addEffect(int effect){
+	public void addEffect(Effect effect){
+		int type = effect.type;
 		//reset existing effect
-		removeEffect(effect);
-		Effect e = new Effect(effect);
-		effects.put(effect,e);
-		e.startHandlers(this);
-		ImageView iv = buildEffectIcon(e);
-		effectIcons.put(effect, iv);
-		if(e.buff){
+		removeEffect(type);
+		effects.put(type,effect);
+		effect.startHandlers(this);
+		ImageView iv = buildEffectIcon(effect);
+		effectIcons.put(type, iv);
+		if(effect.buff){
 			buffLV.addView(iv);
 		}else{
 			debuffLV.addView(iv);
