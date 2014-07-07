@@ -2,7 +2,6 @@ package com.dan.wizardduel.duelists;
 
 import android.graphics.Color;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -16,6 +15,8 @@ import com.dan.wizardduel.spells.Spell;
 import com.todddavies.components.progressbar.ProgressWheel;
 
 public class Player extends Duelist {
+	
+	public ProgressWheel pw;
 	
 	public Player(GameFragment gameFragment) {
 		super(gameFragment);
@@ -55,7 +56,6 @@ public class Player extends Duelist {
 			return;
 		}
 		final long castTime = (spell.castTime+this.effectAmplitude(Effect.SLOW)-this.effectAmplitude(Effect.HASTE))*1000;
-		Log.e("tag","cast spell: "+spell.damage);
 		if(spell != null){
 			castTimer = new CountDownTimer(castTime,10){
 
@@ -84,6 +84,7 @@ public class Player extends Duelist {
 			if(duelistListener != null){
 				duelistListener.onSpellCasting(slot);
 			}
+			castingSpell = slot;
 			castTimer.start();
 			pw.setVisibility(View.VISIBLE);
 		}
@@ -109,6 +110,14 @@ public class Player extends Duelist {
 			}
 		};
 
+	}
+
+	@Override
+	public void counterCurrentSpell() {
+		removeSpell(castingSpell);
+		castTimer.cancel();
+		pw.setVisibility(View.GONE);
+		pw.setProgress(0);
 	};
 
 	

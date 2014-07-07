@@ -3,16 +3,14 @@ package com.dan.wizardduel.duelists;
 import java.util.ArrayList;
 
 import android.graphics.Color;
-import android.os.Message;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.dan.wizardduel.GameFragment;
 import com.dan.wizardduel.R;
-import com.dan.wizardduel.combat.CombatController;
 import com.todddavies.components.progressbar.ProgressWheel;
 
-public class Opponent extends Duelist{
+public abstract class Opponent extends Duelist{
 	
 	public ArrayList<ProgressWheel> spinWheels = new ArrayList<ProgressWheel>();
 

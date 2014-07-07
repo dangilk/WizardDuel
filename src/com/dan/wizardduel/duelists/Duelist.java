@@ -20,7 +20,7 @@ import com.dan.wizardduel.effects.Effect;
 import com.dan.wizardduel.spells.Spell;
 import com.todddavies.components.progressbar.ProgressWheel;
 
-public class Duelist {
+public abstract class Duelist {
 	private static final int maxHealth = 100;
 	int health=100;
 	int maxMana=100;
@@ -41,7 +41,6 @@ public class Duelist {
 	public Boolean isCasting = false;
 	public int castingSpell = 0;
 	public CountDownTimer castTimer = null;
-	public ProgressWheel pw = null;
 	private Listener listener = null;
 	
 	public String playerId = null;
@@ -58,6 +57,8 @@ public class Duelist {
         public void onSpellCastCanceled(int slot);
         public void onSpellExecuted(int slot, Spell spell);
 	}
+	
+	public abstract void counterCurrentSpell();
 	
 	protected Listener duelistListener = null;
 	
@@ -95,6 +96,10 @@ public class Duelist {
 			}else if(spell.effectTarget == Spell.TARGET_SELF){
 				this.addEffect(spell.effect);
 			}
+		}
+		Log.w("dan","execute spell: "+spell.id+" , opponent: "+opponent);
+		if("counter".equalsIgnoreCase(spell.id)){
+			opponent.counterCurrentSpell();
 		}
 	}
 	

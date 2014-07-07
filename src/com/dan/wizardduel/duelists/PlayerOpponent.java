@@ -47,6 +47,7 @@ public class PlayerOpponent extends Opponent{
 
 				
 			};
+			castingSpell = slot;
 			castTimer.start();
 			pw.setVisibility(View.VISIBLE);
 		}
@@ -61,6 +62,12 @@ public class PlayerOpponent extends Opponent{
 	
 	public void executeSpell(Spell spell){
 		gameFragment.opponent.executeSpell(gameFragment.player,spell);
+	}
+
+	@Override
+	public void counterCurrentSpell() {
+		removeSpell(castingSpell);
+		castSpellCanceled(castingSpell);
 	}
 
 }
